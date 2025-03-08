@@ -1,9 +1,10 @@
+import RichTextEditor from "@/components/commonUI/RichText/RichTextEditor";
 import { Box } from "@chakra-ui/react";
 import CharacterCount from "@tiptap/extension-character-count";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
-import RichTextEditor from "./RichTextEditor/RichTextEditor";
+import { Markdown } from "tiptap-markdown";
 
 export interface CardEditorProps {
 	value: string;
@@ -24,10 +25,15 @@ export default function CardEditor({
 			CharacterCount.configure({
 				limit: 3000,
 			}),
+			Markdown.configure({
+				html: false,
+				transformPastedText: true,
+				transformCopiedText: false,
+			}),
 		],
 		content: value,
 		onUpdate: ({ editor }) => {
-			onChange(editor.getHTML());
+			onChange(editor.storage.markdown.getMarkdown());
 		},
 		editorProps: {
 			attributes: {

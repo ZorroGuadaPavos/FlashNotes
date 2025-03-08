@@ -1,15 +1,20 @@
 import { Box, VStack } from "@chakra-ui/react";
 import { EditorContent } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
+import React from "react";
 import EditorToolbar from "./EditorToolbar";
 
-import "@/components/shared/RichText.styles.css";
+import "./RichText.styles.css";
 
 interface RichTextEditorProps {
 	editor: Editor | null;
 }
 
-export default function RichTextEditor({ editor }: RichTextEditorProps) {
+function RichTextEditor({ editor }: RichTextEditorProps) {
+	if (!editor) {
+		return null;
+	}
+
 	return (
 		<VStack height="100%" gap={0} align="stretch" position="relative">
 			<Box position="sticky" top={0} zIndex={1}>
@@ -21,3 +26,5 @@ export default function RichTextEditor({ editor }: RichTextEditorProps) {
 		</VStack>
 	);
 }
+
+export default React.memo(RichTextEditor);
