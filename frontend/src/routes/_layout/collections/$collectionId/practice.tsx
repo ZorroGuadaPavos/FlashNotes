@@ -1,6 +1,6 @@
+import CardPreview from "@/components/cards/CardPreview";
 import CardSkeleton from "@/components/commonUI/CardSkeleton";
 import ErrorState from "@/components/commonUI/ErrorState";
-import PracticeCard from "@/components/practice/PracticeCard";
 import PracticeComplete from "@/components/practice/PracticeComplete";
 import PracticeControls from "@/components/practice/PracticeControls";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -46,7 +46,7 @@ function PracticeComponent() {
 				progress={progress}
 				collectionId={collectionId}
 			/>
-			<PracticeCard
+			<CardPreview
 				card={currentCard}
 				isFlipped={isFlipped}
 				onFlip={handleFlip}

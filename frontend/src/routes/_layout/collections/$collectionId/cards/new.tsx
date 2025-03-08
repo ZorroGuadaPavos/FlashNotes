@@ -23,7 +23,13 @@ function NewCard() {
 
 	return (
 		<VStack h="calc(100dvh - 10rem)" width="100%" gap={4}>
-			<CardHeader side={currentSide} onFlip={flip} onSave={handleClose} />
+			<CardHeader
+				mode="edit"
+				currentSide={currentSide}
+				onFlip={flip}
+				onClose={handleClose}
+				showPreviewButton={false}
+			/>
 			<CardEditor
 				value={currentSide === "front" ? card.front : card.back}
 				onChange={updateContent}

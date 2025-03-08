@@ -2,13 +2,13 @@ import type { Card } from "@/client";
 import { Box } from "@chakra-ui/react";
 import RichTextContent from "../commonUI/RichText/RichTextContent";
 
-interface PracticeCardProps {
+interface CardPreviewProps {
 	card: Card;
 	isFlipped: boolean;
 	onFlip: () => void;
 }
 
-function PracticeCard({ card, isFlipped, onFlip }: PracticeCardProps) {
+function CardPreview({ card, isFlipped, onFlip }: CardPreviewProps) {
 	const commonCardStyles = {
 		padding: "1rem",
 		position: "absolute" as const,
@@ -44,4 +44,4 @@ function PracticeCard({ card, isFlipped, onFlip }: PracticeCardProps) {
 	);
 }
 
-export default PracticeCard;
+export default CardPreview;

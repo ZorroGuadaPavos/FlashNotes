@@ -1,10 +1,12 @@
 import CardEditor from "@/components/cards/CardEditor";
 import CardHeader from "@/components/cards/CardHeader";
+import CardPreview from "@/components/cards/CardPreview";
 import CardSkeleton from "@/components/commonUI/CardSkeleton";
 import { useCard } from "@/hooks/useCard";
 import { VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute(
 	"/_layout/collections/$collectionId/cards/$cardId",
@@ -16,6 +18,7 @@ function CardComponent() {
 	const router = useRouter();
 	const params = Route.useParams();
 	const { collectionId, cardId } = params;
+	const [isPreviewMode, setIsPreviewMode] = useState(false);
 
 	const {
 		card,
@@ -41,6 +44,10 @@ function CardComponent() {
 		}
 	};
 
+	const toggleMode = () => {
+		setIsPreviewMode(!isPreviewMode);
+	};
+
 	return (
 		<VStack
 			h="calc(100dvh - 12rem)"
@@ -48,13 +55,33 @@ function CardComponent() {
 			gap={4}
 			onKeyDown={handleKeyDown}
 		>
-			<CardHeader side={currentSide} onFlip={flip} onSave={handleClose} />
-			<CardEditor
-				value={currentSide === "front" ? card.front : card.back}
-				onChange={updateContent}
-				side={currentSide}
-				isFlipped={isFlipped}
+			<CardHeader
+				mode={isPreviewMode ? "preview" : "edit"}
+				currentSide={currentSide}
+				onFlip={flip}
+				onPreview={toggleMode}
+				onEdit={toggleMode}
+				onClose={handleClose}
 			/>
+
+			{isPreviewMode ? (
+				<CardPreview
+					card={{
+						...card,
+						collection_id: collectionId,
+						id: cardId || "",
+					}}
+					isFlipped={isFlipped}
+					onFlip={flip}
+				/>
+			) : (
+				<CardEditor
+					value={currentSide === "front" ? card.front : card.back}
+					onChange={updateContent}
+					side={currentSide}
+					isFlipped={isFlipped}
+				/>
+			)}
 		</VStack>
 	);
 }
