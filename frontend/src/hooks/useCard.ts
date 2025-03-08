@@ -38,7 +38,7 @@ export function useCard(collectionId: string, cardId?: string) {
 	const saveCard = useCallback(
 		async (cardData: CardData) => {
 			if (!cardData.front.trim() && !cardData.back.trim()) return;
-			
+
 			try {
 				let savedCard: CardData;
 				if (cardData.id) {
@@ -54,7 +54,7 @@ export function useCard(collectionId: string, cardId?: string) {
 					});
 					setCard((prev) => ({ ...prev, id: savedCard.id }));
 				}
-				
+
 				queryClient.invalidateQueries({
 					queryKey: ["collections", collectionId, "cards"],
 				});
@@ -67,13 +67,13 @@ export function useCard(collectionId: string, cardId?: string) {
 
 	const updateContent = useCallback(
 		(value: string) => {
-			setCard(prev => ({ ...prev, [currentSide]: value }));
+			setCard((prev) => ({ ...prev, [currentSide]: value }));
 		},
 		[currentSide],
 	);
 
 	const flip = useCallback(() => {
-		setIsFlipped(prev => !prev);
+		setIsFlipped((prev) => !prev);
 		setCurrentSide((side) => (side === "front" ? "back" : "front"));
 	}, []);
 

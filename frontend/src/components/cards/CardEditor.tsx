@@ -1,5 +1,5 @@
 import RichTextEditor from "@/components/commonUI/RichText/RichTextEditor";
-import { Box } from "@chakra-ui/react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
 import CharacterCount from "@tiptap/extension-character-count";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -43,7 +43,7 @@ export default function CardEditor({
 	});
 
 	useEffect(() => {
-		if (editor && editor.getHTML() !== value) {
+		if (editor && editor.storage.markdown.getMarkdown() !== value) {
 			editor.commands.setContent(value);
 		}
 	}, [editor, value]);
