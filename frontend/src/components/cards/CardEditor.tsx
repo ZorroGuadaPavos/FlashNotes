@@ -1,5 +1,5 @@
 import RichTextEditor from "@/components/commonUI/RichText/RichTextEditor";
-import { Box, HStack, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import CharacterCount from "@tiptap/extension-character-count";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
