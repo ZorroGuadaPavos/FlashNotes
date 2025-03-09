@@ -1,5 +1,6 @@
 import { Box, HStack, IconButton } from "@chakra-ui/react";
 import type { Editor } from "@tiptap/react";
+import { memo, useCallback } from "react";
 import {
 	RiBold,
 	RiCodeBoxLine,
@@ -52,54 +53,60 @@ const toolbarButtons: ToolbarButton[] = [
 	},
 ];
 
-export default function EditorToolbar({ editor }: EditorToolbarProps) {
+function EditorToolbar({ editor }: EditorToolbarProps) {
 	if (!editor) {
 		return null;
 	}
 
-	const toggleFormat = (command: string) => {
-		switch (command) {
-			case "heading-1":
-				editor.chain().focus().toggleHeading({ level: 1 }).run();
-				break;
-			case "heading-2":
-				editor.chain().focus().toggleHeading({ level: 2 }).run();
-				break;
-			case "heading-3":
-				editor.chain().focus().toggleHeading({ level: 3 }).run();
-				break;
-			case "bulletList":
-				editor.chain().focus().toggleBulletList().run();
-				break;
-			case "orderedList":
-				editor.chain().focus().toggleOrderedList().run();
-				break;
-			case "codeBlock":
-				editor.chain().focus().toggleCodeBlock().run();
-				break;
-			default:
-				editor.chain().focus().toggleMark(command).run();
-		}
-	};
+	const toggleFormat = useCallback(
+		(command: string) => {
+			switch (command) {
+				case "heading-1":
+					editor.chain().focus().toggleHeading({ level: 1 }).run();
+					break;
+				case "heading-2":
+					editor.chain().focus().toggleHeading({ level: 2 }).run();
+					break;
+				case "heading-3":
+					editor.chain().focus().toggleHeading({ level: 3 }).run();
+					break;
+				case "bulletList":
+					editor.chain().focus().toggleBulletList().run();
+					break;
+				case "orderedList":
+					editor.chain().focus().toggleOrderedList().run();
+					break;
+				case "codeBlock":
+					editor.chain().focus().toggleCodeBlock().run();
+					break;
+				default:
+					editor.chain().focus().toggleMark(command).run();
+			}
+		},
+		[editor],
+	);
 
-	const isActive = (command: string) => {
-		switch (command) {
-			case "heading-1":
-				return editor.isActive("heading", { level: 1 });
-			case "heading-2":
-				return editor.isActive("heading", { level: 2 });
-			case "heading-3":
-				return editor.isActive("heading", { level: 3 });
-			case "bulletList":
-				return editor.isActive("bulletList");
-			case "orderedList":
-				return editor.isActive("orderedList");
-			case "codeBlock":
-				return editor.isActive("codeBlock");
-			default:
-				return editor.isActive(command);
-		}
-	};
+	const isActive = useCallback(
+		(command: string) => {
+			switch (command) {
+				case "heading-1":
+					return editor.isActive("heading", { level: 1 });
+				case "heading-2":
+					return editor.isActive("heading", { level: 2 });
+				case "heading-3":
+					return editor.isActive("heading", { level: 3 });
+				case "bulletList":
+					return editor.isActive("bulletList");
+				case "orderedList":
+					return editor.isActive("orderedList");
+				case "codeBlock":
+					return editor.isActive("codeBlock");
+				default:
+					return editor.isActive(command);
+			}
+		},
+		[editor],
+	);
 
 	return (
 		<HStack
@@ -153,3 +160,5 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 		</HStack>
 	);
 }
+
+export default memo(EditorToolbar);
