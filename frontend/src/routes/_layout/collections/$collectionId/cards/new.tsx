@@ -2,7 +2,9 @@ import CardEditor from "@/components/cards/CardEditor";
 import CardHeader from "@/components/cards/CardHeader";
 import { useCard } from "@/hooks/useCard";
 import { VStack } from "@chakra-ui/react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useCallback, useState } from "react";
 
 export const Route = createFileRoute(
 	"/_layout/collections/$collectionId/cards/new",
@@ -13,11 +15,18 @@ export const Route = createFileRoute(
 function NewCard() {
 	const navigate = useNavigate();
 	const { collectionId } = Route.useParams();
-	const { card, currentSide, isFlipped, updateContent, saveCard, flip } =
+	const { editedCard, saveCard, updateCardSide, isLoading } =
 		useCard(collectionId);
+	const [isFlipped, setIsFlipped] = useState(false);
+
+	const currentSide = isFlipped ? "back" : "front";
+
+	const handleFlip = useCallback(() => {
+		setIsFlipped((prev) => !prev);
+	}, []);
 
 	const handleClose = async () => {
-		await saveCard(card);
+		await saveCard(editedCard);
 		navigate({ to: `/collections/${collectionId}` });
 	};
 
@@ -26,14 +35,14 @@ function NewCard() {
 			<CardHeader
 				mode="edit"
 				currentSide={currentSide}
-				onFlip={flip}
+				onFlip={handleFlip}
 				onClose={handleClose}
 				showPreviewButton={false}
 			/>
 			<CardEditor
-				value={currentSide === "front" ? card.front : card.back}
-				onChange={updateContent}
-				side={currentSide}
+				cardContent={editedCard}
+				onContentChange={(side, content) => updateCardSide(side, content)}
+				isLoading={isLoading}
 				isFlipped={isFlipped}
 			/>
 		</VStack>

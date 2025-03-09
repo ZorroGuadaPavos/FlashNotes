@@ -1,70 +1,69 @@
 import RichTextEditor from "@/components/commonUI/RichText/RichTextEditor";
+import { useRichTextEditor } from "@/components/commonUI/RichText/useRichTextEditor";
 import { Box } from "@chakra-ui/react";
-import CharacterCount from "@tiptap/extension-character-count";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
-import { Markdown } from "tiptap-markdown";
+import CardSkeleton from "../commonUI/CardSkeleton";
 
-export interface CardEditorProps {
-	value: string;
-	onChange: (value: string) => void;
-	side: "front" | "back";
+interface CardContent {
+	front: string;
+	back: string;
+	id?: string;
+}
+
+interface CardEditorProps {
+	cardContent: CardContent;
+	onContentChange: (side: "front" | "back", content: string) => void;
+	isLoading?: boolean;
+	autoFocus?: boolean;
 	isFlipped: boolean;
 }
 
 export default function CardEditor({
-	value,
-	onChange,
-	side,
+	cardContent,
+	onContentChange,
+	isLoading = false,
+	autoFocus = true,
 	isFlipped,
 }: CardEditorProps) {
-	const editor = useEditor({
-		extensions: [
-			StarterKit,
-			CharacterCount.configure({
-				limit: 3000,
-			}),
-			Markdown.configure({
-				html: false,
-				transformPastedText: true,
-				transformCopiedText: false,
-			}),
-		],
-		content: value,
-		onUpdate: ({ editor }) => {
-			onChange(editor.storage.markdown.getMarkdown());
-		},
-		editorProps: {
-			attributes: {
-				class: "tiptap-editor",
-			},
-		},
-	});
+	const editor = useRichTextEditor();
 
 	useEffect(() => {
-		if (editor && editor.storage.markdown.getMarkdown() !== value) {
-			editor.commands.setContent(value);
+		if (editor && !isLoading) {
+			const content = isFlipped ? cardContent.back : cardContent.front;
+			editor.commands.setContent(content || "");
+			if (autoFocus) {
+				editor.commands.focus();
+			}
 		}
-	}, [editor, value]);
+	}, [editor, isLoading, autoFocus, isFlipped, cardContent]);
 
-	const handleContainerClick = () => {
-		if (editor && !editor.isFocused) {
-			editor.commands.focus();
-		}
-	};
+	useEffect(() => {
+		// Auto-save content when user stops editing (editor loses focus)
+		if (!editor) return;
+		const handleAutoSave = () => {
+			const newContent = editor.storage.markdown.getMarkdown();
+			const currentSide = isFlipped ? "back" : "front";
+			onContentChange(currentSide, newContent);
+		};
+
+		editor.on("blur", handleAutoSave);
+
+		return () => {
+			editor.off("blur", handleAutoSave);
+		};
+	}, [editor, isFlipped, onContentChange]);
+
+	if (isLoading) return <CardSkeleton />;
 
 	const commonBoxStyles = {
-		onClick: handleContainerClick,
-		position: "absolute" as const,
+		position: "absolute",
 		width: "100%",
 		height: "100%",
-		backfaceVisibility: "hidden" as const,
+		backfaceVisibility: "hidden",
 		borderRadius: "lg",
 		borderWidth: "1px",
 		boxShadow: "sm",
 		borderColor: "bg.200",
-		cursor: "text",
 	};
 
 	return (
@@ -78,7 +77,7 @@ export default function CardEditor({
 			transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
 		>
 			<Box {...commonBoxStyles} bg="bg.50">
-				{side === "front" && <RichTextEditor editor={editor} />}
+				{!isFlipped && <RichTextEditor editor={editor} />}
 			</Box>
 
 			<Box
@@ -87,7 +86,7 @@ export default function CardEditor({
 				transform="rotateY(180deg)"
 				visibility={isFlipped ? "visible" : "hidden"}
 			>
-				{side === "back" && <RichTextEditor editor={editor} />}
+				{isFlipped && <RichTextEditor editor={editor} />}
 			</Box>
 		</Box>
 	);

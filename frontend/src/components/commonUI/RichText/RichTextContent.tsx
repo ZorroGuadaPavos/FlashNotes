@@ -51,7 +51,7 @@ export default function RichTextContent({
 		const containerHeight = container.clientHeight;
 		const contentHeight = content.scrollHeight;
 
-		if (contentHeight <= containerHeight * 0.15) {
+		if (contentHeight <= containerHeight * 0.1) {
 			const multiplier = containerHeight / contentHeight;
 			if (multiplier > 1) {
 				const newMultiplier = Math.min(multiplier, 1.5);

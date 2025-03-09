@@ -9,11 +9,18 @@ interface CardData {
 	id?: string;
 }
 
+const emptyCard: CardData = { front: "", back: "" };
+
+const hasChanges = (dataToSave: CardData, original: CardData): boolean => {
+	return (
+		dataToSave.front !== original.front || dataToSave.back !== original.back
+	);
+};
+
 export function useCard(collectionId: string, cardId?: string) {
 	const queryClient = useQueryClient();
-	const [card, setCard] = useState<CardData>({ front: "", back: "" });
-	const [currentSide, setCurrentSide] = useState<"front" | "back">("front");
-	const [isFlipped, setIsFlipped] = useState(false);
+	const [editedCard, setEditedCard] = useState<CardData>(emptyCard);
+	const [originalCard, setOriginalCard] = useState<CardData>(emptyCard);
 	const [isLoading, setIsLoading] = useState(!!cardId);
 
 	useEffect(() => {
@@ -21,11 +28,12 @@ export function useCard(collectionId: string, cardId?: string) {
 			setIsLoading(false);
 			return;
 		}
-
 		const fetchCard = async () => {
 			try {
+				setIsLoading(true);
 				const data = await FlashcardsService.readCard({ collectionId, cardId });
-				setCard(data);
+				setEditedCard(data);
+				setOriginalCard(data);
 			} catch (error) {
 				toaster.create({ title: "Error loading card", type: "error" });
 			} finally {
@@ -35,26 +43,42 @@ export function useCard(collectionId: string, cardId?: string) {
 		fetchCard();
 	}, [cardId, collectionId]);
 
+	const updateCardSide = useCallback(
+		(side: "front" | "back", content: string) => {
+			setEditedCard((prev) => ({
+				...prev,
+				[side]: content,
+			}));
+		},
+		[],
+	);
+
 	const saveCard = useCallback(
-		async (cardData: CardData) => {
-			if (!cardData.front.trim() && !cardData.back.trim()) return;
+		async (cardData?: CardData) => {
+			const dataToSave = cardData || editedCard;
+			if (!dataToSave.front.trim() && !dataToSave.back.trim()) return;
+
+			if (!hasChanges(dataToSave, originalCard)) return;
 
 			try {
 				let savedCard: CardData;
-				if (cardData.id) {
+
+				if (dataToSave.id) {
 					savedCard = await FlashcardsService.updateCard({
 						collectionId,
-						cardId: cardData.id,
-						requestBody: cardData,
+						cardId: dataToSave.id,
+						requestBody: dataToSave,
 					});
 				} else {
 					savedCard = await FlashcardsService.createCard({
 						collectionId,
-						requestBody: cardData,
+						requestBody: dataToSave,
 					});
-					setCard((prev) => ({ ...prev, id: savedCard.id }));
+
+					setEditedCard((prev) => ({ ...prev, id: savedCard.id }));
 				}
 
+				setOriginalCard({ ...dataToSave, id: savedCard.id });
 				queryClient.invalidateQueries({
 					queryKey: ["collections", collectionId, "cards"],
 				});
@@ -62,28 +86,13 @@ export function useCard(collectionId: string, cardId?: string) {
 				toaster.create({ title: "Error saving card", type: "error" });
 			}
 		},
-		[collectionId, queryClient],
+		[collectionId, queryClient, editedCard, originalCard],
 	);
-
-	const updateContent = useCallback(
-		(value: string) => {
-			setCard((prev) => ({ ...prev, [currentSide]: value }));
-		},
-		[currentSide],
-	);
-
-	const flip = useCallback(() => {
-		setIsFlipped((prev) => !prev);
-		setCurrentSide((side) => (side === "front" ? "back" : "front"));
-	}, []);
 
 	return {
-		card,
+		editedCard,
 		isLoading,
-		currentSide,
-		isFlipped,
-		updateContent,
+		updateCardSide,
 		saveCard,
-		flip,
 	};
 }

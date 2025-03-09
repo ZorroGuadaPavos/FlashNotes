@@ -1,3 +1,4 @@
+import type { Card } from "@/client";
 import CardEditor from "@/components/cards/CardEditor";
 import CardHeader from "@/components/cards/CardHeader";
 import CardPreview from "@/components/cards/CardPreview";
@@ -6,7 +7,7 @@ import { useCard } from "@/hooks/useCard";
 import { VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const Route = createFileRoute(
 	"/_layout/collections/$collectionId/cards/$cardId",
@@ -15,27 +16,29 @@ export const Route = createFileRoute(
 });
 
 function CardComponent() {
+	const { collectionId, cardId } = Route.useParams();
 	const router = useRouter();
-	const params = Route.useParams();
-	const { collectionId, cardId } = params;
+	const { editedCard, isLoading, updateCardSide, saveCard } = useCard(
+		collectionId,
+		cardId,
+	);
+	const [isFlipped, setIsFlipped] = useState(false);
 	const [isPreviewMode, setIsPreviewMode] = useState(false);
 
-	const {
-		card,
-		isLoading,
-		currentSide,
-		isFlipped,
-		updateContent,
-		saveCard,
-		flip,
-	} = useCard(collectionId, cardId);
+	const currentSide = isFlipped ? "back" : "front";
 
-	if (isLoading) return <CardSkeleton />;
+	const toggleMode = useCallback(() => {
+		setIsPreviewMode((prev) => !prev);
+	}, []);
 
-	const handleClose = async () => {
-		await saveCard(card);
+	const handleFlip = useCallback(() => {
+		setIsFlipped((prev) => !prev);
+	}, []);
+
+	const handleClose = useCallback(() => {
+		saveCard();
 		router.history.back();
-	};
+	}, [router.history, saveCard]);
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (e.key === "Escape") {
@@ -44,9 +47,13 @@ function CardComponent() {
 		}
 	};
 
-	const toggleMode = () => {
-		setIsPreviewMode(!isPreviewMode);
-	};
+	const getCardData = (): Card => ({
+		...editedCard,
+		collection_id: collectionId,
+		id: editedCard.id || cardId || "",
+	});
+
+	if (isLoading) return <CardSkeleton />;
 
 	return (
 		<VStack
@@ -58,7 +65,7 @@ function CardComponent() {
 			<CardHeader
 				mode={isPreviewMode ? "preview" : "edit"}
 				currentSide={currentSide}
-				onFlip={flip}
+				onFlip={handleFlip}
 				onPreview={toggleMode}
 				onEdit={toggleMode}
 				onClose={handleClose}
@@ -66,19 +73,15 @@ function CardComponent() {
 
 			{isPreviewMode ? (
 				<CardPreview
-					card={{
-						...card,
-						collection_id: collectionId,
-						id: cardId || "",
-					}}
+					card={getCardData()}
 					isFlipped={isFlipped}
-					onFlip={flip}
+					onFlip={handleFlip}
 				/>
 			) : (
 				<CardEditor
-					value={currentSide === "front" ? card.front : card.back}
-					onChange={updateContent}
-					side={currentSide}
+					cardContent={editedCard}
+					onContentChange={(side, content) => updateCardSide(side, content)}
+					isLoading={isLoading}
 					isFlipped={isFlipped}
 				/>
 			)}
