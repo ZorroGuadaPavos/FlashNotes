@@ -1,55 +1,21 @@
+import RichTextEditor from "@/components/commonUI/RichText/RichTextEditor";
 import { Box } from "@chakra-ui/react";
-import CharacterCount from "@tiptap/extension-character-count";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
-import RichTextEditor from "./RichTextEditor/RichTextEditor";
+import type { Editor } from "@tiptap/react";
 
 export interface CardEditorProps {
-	value: string;
-	onChange: (value: string) => void;
 	side: "front" | "back";
 	isFlipped: boolean;
+	frontEditor: Editor | null;
+	backEditor: Editor | null;
 }
 
 export default function CardEditor({
-	value,
-	onChange,
 	side,
 	isFlipped,
+	frontEditor,
+	backEditor,
 }: CardEditorProps) {
-	const editor = useEditor({
-		extensions: [
-			StarterKit,
-			CharacterCount.configure({
-				limit: 3000,
-			}),
-		],
-		content: value,
-		onUpdate: ({ editor }) => {
-			onChange(editor.getHTML());
-		},
-		editorProps: {
-			attributes: {
-				class: "tiptap-editor",
-			},
-		},
-	});
-
-	useEffect(() => {
-		if (editor && editor.getHTML() !== value) {
-			editor.commands.setContent(value);
-		}
-	}, [editor, value]);
-
-	const handleContainerClick = () => {
-		if (editor && !editor.isFocused) {
-			editor.commands.focus();
-		}
-	};
-
 	const commonBoxStyles = {
-		onClick: handleContainerClick,
 		position: "absolute" as const,
 		width: "100%",
 		height: "100%",
@@ -72,7 +38,9 @@ export default function CardEditor({
 			transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
 		>
 			<Box {...commonBoxStyles} bg="bg.50">
-				{side === "front" && <RichTextEditor editor={editor} />}
+				{side === "front" && frontEditor && (
+					<RichTextEditor editor={frontEditor} />
+				)}
 			</Box>
 
 			<Box
@@ -81,7 +49,9 @@ export default function CardEditor({
 				transform="rotateY(180deg)"
 				visibility={isFlipped ? "visible" : "hidden"}
 			>
-				{side === "back" && <RichTextEditor editor={editor} />}
+				{side === "back" && backEditor && (
+					<RichTextEditor editor={backEditor} />
+				)}
 			</Box>
 		</Box>
 	);

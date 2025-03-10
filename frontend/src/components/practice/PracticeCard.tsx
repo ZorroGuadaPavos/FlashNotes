@@ -1,6 +1,6 @@
 import type { Card } from "@/client";
 import { Box } from "@chakra-ui/react";
-import RichTextContent from "./RichTextContent/RichTextContent";
+import RichTextContent from "../commonUI/RichText/RichTextContent";
 
 interface PracticeCardProps {
 	card: Card;

@@ -1,10 +1,12 @@
 import CardEditor from "@/components/cards/CardEditor";
 import CardHeader from "@/components/cards/CardHeader";
 import CardSkeleton from "@/components/commonUI/CardSkeleton";
+import { useRichTextEditor } from "@/components/commonUI/RichText";
 import { useCard } from "@/hooks/useCard";
 import { VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute(
 	"/_layout/collections/$collectionId/cards/$cardId",
@@ -17,20 +19,32 @@ function CardComponent() {
 	const params = Route.useParams();
 	const { collectionId, cardId } = params;
 
-	const {
-		card,
-		isLoading,
-		currentSide,
-		isFlipped,
-		updateContent,
-		saveCard,
-		flip,
-	} = useCard(collectionId, cardId);
+	const { card, isLoading, currentSide, isFlipped, saveCard, flip } = useCard(
+		collectionId,
+		cardId,
+	);
+
+	const frontEditor = useRichTextEditor();
+
+	const backEditor = useRichTextEditor();
+
+	useEffect(() => {
+		if (frontEditor) {
+			frontEditor.commands.setContent(card.front);
+		}
+		if (backEditor) {
+			backEditor.commands.setContent(card.back);
+		}
+	}, [frontEditor, backEditor, card]);
 
 	if (isLoading) return <CardSkeleton />;
 
 	const handleClose = async () => {
-		await saveCard(card);
+		await saveCard({
+			...card,
+			front: frontEditor?.getHTML() || "",
+			back: backEditor?.getHTML() || "",
+		});
 		router.history.back();
 	};
 
@@ -50,10 +64,10 @@ function CardComponent() {
 		>
 			<CardHeader side={currentSide} onFlip={flip} onSave={handleClose} />
 			<CardEditor
-				value={currentSide === "front" ? card.front : card.back}
-				onChange={updateContent}
 				side={currentSide}
 				isFlipped={isFlipped}
+				frontEditor={frontEditor}
+				backEditor={backEditor}
 			/>
 		</VStack>
 	);
