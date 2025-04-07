@@ -47,6 +47,9 @@ const config = defineConfig({
 					green: {
 						value: "{colors.green.600}",
 					},
+					orange: {
+						value: "#F49F76",
+					},
 				},
 				bd: {
 					blue: {

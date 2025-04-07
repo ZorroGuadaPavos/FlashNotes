@@ -7,80 +7,95 @@ import {
 	DialogHeader,
 	DialogRoot,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRef, useState } from "react";
+import { useDisclosure } from "@chakra-ui/react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BlueButton, RedButton } from "../commonUI/Button";
 import { DefaultInput } from "../commonUI/Input";
 
 interface CollectionDialogProps {
 	onAdd: (collectionData: { name: string }) => Promise<void>;
-	children: React.ReactNode;
 }
 
-const CollectionDialog: React.FC<CollectionDialogProps> = ({
-	onAdd,
-	children,
-}) => {
-	const { t } = useTranslation();
-	const [collectionName, setCollectionName] = useState("");
-	const closeButtonRef = useRef<HTMLButtonElement>(null);
+export interface CollectionDialogRef {
+	open: () => void;
+	close: () => void;
+}
 
-	const handleSubmit = async () => {
-		if (!collectionName.trim()) return;
+const CollectionDialog = forwardRef<CollectionDialogRef, CollectionDialogProps>(
+	(props, ref) => {
+		const { onAdd } = props;
+		const { t } = useTranslation();
+		const [collectionName, setCollectionName] = useState("");
+		const closeButtonRef = useRef<HTMLButtonElement>(null);
+		const { open, onOpen, onClose } = useDisclosure();
 
-		try {
-			await onAdd({ name: collectionName });
-			setCollectionName("");
-			closeButtonRef.current?.click();
-		} catch (error) {
-			console.error("Failed to create collection:", error);
-		}
-	};
+		useImperativeHandle(ref, () => ({
+			open: onOpen,
+			close: onClose,
+		}));
 
-	return (
-		<DialogRoot
-			key="add-collection-dialog"
-			placement="center"
-			motionPreset="slide-in-bottom"
-		>
-			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent bg="bg.50">
-				<DialogHeader>
-					<DialogTitle color="fg.DEFAULT">
-						{t("components.collectionDialog.title")}
-					</DialogTitle>
-				</DialogHeader>
-				<DialogBody>
-					<DefaultInput
-						placeholder={t("general.words.collectionName")}
-						value={collectionName}
-						onChange={(e) => setCollectionName(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								e.preventDefault();
-								handleSubmit();
-							}
-						}}
-					/>
-				</DialogBody>
-				<DialogFooter>
-					<DialogActionTrigger asChild>
-						<RedButton onClick={() => setCollectionName("")}>
-							{t("general.actions.cancel")}
-						</RedButton>
-					</DialogActionTrigger>
-					<DialogActionTrigger asChild>
-						<BlueButton onClick={handleSubmit}>
-							{t("general.actions.save")}
-						</BlueButton>
-					</DialogActionTrigger>
-				</DialogFooter>
-				<DialogCloseTrigger ref={closeButtonRef} />
-			</DialogContent>
-		</DialogRoot>
-	);
-};
+		const handleSubmit = async () => {
+			if (!collectionName.trim()) return;
+
+			try {
+				await onAdd({ name: collectionName });
+				setCollectionName("");
+				onClose();
+			} catch (error) {
+				console.error("Failed to create collection:", error);
+			}
+		};
+
+		return (
+			<DialogRoot
+				key="add-collection-dialog"
+				placement="center"
+				motionPreset="slide-in-bottom"
+				open={open}
+				onOpenChange={(e) => {
+					if (!e.open) {
+						onClose();
+					}
+				}}
+			>
+				<DialogContent bg="bg.50">
+					<DialogHeader>
+						<DialogTitle color="fg.DEFAULT">
+							{t("components.collectionDialog.title")}
+						</DialogTitle>
+					</DialogHeader>
+					<DialogBody>
+						<DefaultInput
+							placeholder={t("general.words.collectionName")}
+							value={collectionName}
+							onChange={(e) => setCollectionName(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									e.preventDefault();
+									handleSubmit();
+								}
+							}}
+						/>
+					</DialogBody>
+					<DialogFooter>
+						<DialogActionTrigger asChild>
+							<RedButton onClick={onClose}>
+								{t("general.actions.cancel")}
+							</RedButton>
+						</DialogActionTrigger>
+						<DialogActionTrigger asChild>
+							<BlueButton onClick={handleSubmit}>
+								{t("general.actions.save")}
+							</BlueButton>
+						</DialogActionTrigger>
+					</DialogFooter>
+					<DialogCloseTrigger ref={closeButtonRef} />
+				</DialogContent>
+			</DialogRoot>
+		);
+	},
+);
 
 export default CollectionDialog;

@@ -25,6 +25,10 @@
 		"practiceComplete": {
 			"cardsCorrect": "Je hebt {{correct}} van de {{total}} kaarten goed",
 			"title": "Oefening Voltooid"
+		},
+		"speedDial": {
+			"closeMenu": "Menu sluiten",
+			"openMenu": "Menu openen"
 		}
 	},
 	"general": {
@@ -37,6 +41,7 @@
 			"comingSoon": "Binnenkort beschikbaar",
 			"confirmPassword": "Bevestig Wachtwoord",
 			"create": "Creëren",
+			"createAiCollection": "Creëren met AI",
 			"creating": "Creëren",
 			"delete": "Verwijderen",
 			"deleteCard": "Kaart Verwijderen",
