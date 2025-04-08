@@ -86,7 +86,10 @@
 			"signUp": "Sign Up",
 			"startPracticing": "Start Practicing",
 			"toggleColorMode": "Toggle color mode",
-			"rename": "Rename"
+			"rename": "Rename",
+			"editCard": "Edit Card",
+			"practice": "Practice",
+			"viewStats": "View Statistics"
 		},
 		"errors": {
 			"collectionNotFound": "Collection not found",

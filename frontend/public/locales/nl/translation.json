@@ -86,7 +86,8 @@
 			"signUp": "Aanmelden",
 			"startPracticing": "Begin met Oefenen",
 			"toggleColorMode": "Kleurmodus Wisselen",
-			"rename": "Hernoemen"
+			"rename": "Hernoemen",
+			"practice": "Oefenen"
 		},
 		"errors": {
 			"collectionNotFound": "Collectie niet gevonden",

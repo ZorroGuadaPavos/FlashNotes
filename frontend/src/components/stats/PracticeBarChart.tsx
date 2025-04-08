@@ -1,4 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
 	Bar,
@@ -28,6 +28,7 @@ interface PracticeBarChartProps {
 
 const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 	const { t } = useTranslation();
+	const showAxisAndLegend = useBreakpointValue({ base: false, md: true });
 
 	const chartData: PracticeData[] = (
 		sessions?.map((session, index) => ({
@@ -58,12 +59,16 @@ const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 						}}
 					>
 						<CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-						<XAxis
-							dataKey="session"
-							tick={{ fill: "#718096" }}
-							tickFormatter={(value, index) => chartData[index]?.date || value}
-						/>
-						<YAxis tick={{ fill: "#718096" }} />
+						{showAxisAndLegend && (
+							<XAxis
+								dataKey="session"
+								tick={{ fill: "#718096" }}
+								tickFormatter={(value, index) =>
+									chartData[index]?.date || value
+								}
+							/>
+						)}
+						{showAxisAndLegend && <YAxis tick={{ fill: "#718096" }} />}
 						<Tooltip
 							formatter={(value, name) => [
 								value,
@@ -86,13 +91,15 @@ const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 								border: "1px solid #e2e8f0",
 							}}
 						/>
-						<Legend
-							formatter={(value) => {
-								return value === "correct"
-									? t("components.stats.correctAnswers")
-									: t("components.stats.incorrectAnswers");
-							}}
-						/>
+						{showAxisAndLegend && (
+							<Legend
+								formatter={(value) => {
+									return value === "correct"
+										? t("components.stats.correctAnswers")
+										: t("components.stats.incorrectAnswers");
+								}}
+							/>
+						)}
 						<ReferenceLine y={0} stroke="#000" />
 						<Bar dataKey="correct" fill="#38A169" radius={[4, 4, 0, 0]} />
 						<Bar dataKey="incorrect" fill="#E53E3E" radius={[4, 4, 0, 0]} />

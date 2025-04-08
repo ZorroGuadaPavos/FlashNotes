@@ -86,7 +86,8 @@
 			"signUp": "Registrarse",
 			"startPracticing": "Comenzar a Practicar",
 			"toggleColorMode": "Cambiar modo de color",
-			"rename": "Renombrar"
+			"rename": "Renombrar",
+			"practice": "Practicar"
 		},
 		"errors": {
 			"collectionNotFound": "Colección no encontrada",

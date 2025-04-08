@@ -1,4 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
@@ -27,6 +27,8 @@ interface PerformanceChartProps {
 const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 	const { t } = useTranslation();
 
+	const showAxisAndLegend = useBreakpointValue({ base: false, md: true });
+
 	const chartData: PerformanceData[] = (
 		sessions?.map((session, index) => {
 			const correctRate =
@@ -41,7 +43,7 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 			});
 			return {
 				label: `#${index + 1} (${dateStr})`,
-				correctRate,
+				correctRate: correctRate,
 				cardsPracticed: session.cards_practiced,
 			};
 		}) || []
@@ -64,22 +66,29 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 						}}
 					>
 						<CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-						<XAxis
-							dataKey="label"
-							tick={{ fill: "#718096", fontSize: 12 }}
-							tickFormatter={(value) => value.split(" ")[0]}
-						/>
-						<YAxis
-							yAxisId="left"
-							tick={{ fill: "#718096" }}
-							domain={[0, 100]}
-						/>
-						<YAxis
-							yAxisId="right"
-							orientation="right"
-							tick={{ fill: "#718096" }}
-							allowDecimals={false}
-						/>
+						{showAxisAndLegend && (
+							<XAxis
+								dataKey="label"
+								tick={{ fill: "#718096", fontSize: 12 }}
+								tickFormatter={(value) => value.split(" ")[0]}
+							/>
+						)}
+						{showAxisAndLegend && (
+							<YAxis
+								yAxisId="left"
+								tick={{ fill: "#718096" }}
+								domain={[0, 100]}
+								tickFormatter={(value) => `${value}%`}
+							/>
+						)}
+						{showAxisAndLegend && (
+							<YAxis
+								yAxisId="right"
+								orientation="right"
+								tick={{ fill: "#718096" }}
+								allowDecimals={false}
+							/>
+						)}
 						<Tooltip
 							formatter={(value, name) => {
 								if (name === "correctRate") {
@@ -98,7 +107,7 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 								border: "1px solid #e2e8f0",
 							}}
 						/>
-						<Legend />
+						{showAxisAndLegend && <Legend />}
 						<Line
 							yAxisId="left"
 							type="monotone"
