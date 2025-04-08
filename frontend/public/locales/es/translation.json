@@ -39,6 +39,8 @@
 			"failedOutOfAttempts": "Fallaste {{failed}} de {{total}} intentos",
 			"practiceTheseCards": "Concéntrate en practicar estas tarjetas para mejorar tus resultados",
 			"practiceSessions": "Sesiones de Práctica",
+			"averageAccuracy": "Precisión Promedio",
+			"allSessions": "todas las sesiones",
 			"successRate": "Tasa de Éxito",
 			"studyStreak": "Racha de Estudio",
 			"days": "días",
@@ -48,7 +50,12 @@
 			"notPracticedYet": "Aún No Practicadas",
 			"noDataAvailable": "No hay datos disponibles para este gráfico",
 			"lastSession": "Última sesión",
-			"noRecentSessions": "Sin sesiones recientes"
+			"noRecentSessions": "Sin sesiones recientes",
+			"learningTrend": "Tendencia de Aprendizaje",
+			"comparedToPrevious": "comparado con anterior",
+			"notEnoughData": "datos insuficientes",
+			"successRateTooltip": "Porcentaje de respuestas correctas en tu sesión más reciente",
+			"learningTrendTooltip": "Cambio en la tasa de éxito entre tus dos sesiones más recientes"
 		}
 	},
 	"general": {
@@ -120,6 +127,7 @@
 			"password": "Contraseña",
 			"statistics": "Estadísticas",
 			"totalCards": "Total de Tarjetas",
+			"cards": "tarjetas",
 			"version": "Versión"
 		}
 	},

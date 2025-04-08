@@ -50,6 +50,7 @@ export type Collection = {
 }
 
 export type CollectionBasicInfo = {
+  name: string
   total_cards: number
   total_practice_sessions: number
 }
