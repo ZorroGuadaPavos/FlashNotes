@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
 	Cell,
@@ -29,6 +29,8 @@ const MasteryDonutChart = ({
 	title,
 }: MasteryDonutChartProps) => {
 	const { t } = useTranslation();
+
+	const showLegend = useBreakpointValue({ base: false, md: true });
 
 	const latestSession = recentSessions.length > 0 ? recentSessions[0] : null;
 	const totalCards = collectionInfo.total_cards;
@@ -88,8 +90,8 @@ const MasteryDonutChart = ({
 			<Heading size="md" mb={4}>
 				{title || t("components.stats.latestSessionBreakdown")}
 			</Heading>
-			<Flex direction="column" align="center" justify="center" h="100%">
-				<ResponsiveContainer width="100%" height="85%">
+			<Flex direction="column" align="center" justify="center">
+				<ResponsiveContainer width="100%" height={300}>
 					<PieChart>
 						<Pie
 							data={sessionBreakdownData}
@@ -144,18 +146,20 @@ const MasteryDonutChart = ({
 								border: "1px solid #e2e8f0",
 							}}
 						/>
-						<Legend
-							verticalAlign="bottom"
-							height={36}
-							formatter={(value, entry) => {
-								const color = entry?.color;
-								return (
-									<span style={{ color: color || "#000", fontWeight: 500 }}>
-										{value}
-									</span>
-								);
-							}}
-						/>
+						{showLegend && (
+							<Legend
+								verticalAlign="bottom"
+								height={36}
+								formatter={(value, entry) => {
+									const color = entry?.color;
+									return (
+										<span style={{ color: color || "#000", fontWeight: 500 }}>
+											{value}
+										</span>
+									);
+								}}
+							/>
+						)}
 					</PieChart>
 				</ResponsiveContainer>
 				<Text fontWeight="bold" fontSize="xl" mt={-4}>

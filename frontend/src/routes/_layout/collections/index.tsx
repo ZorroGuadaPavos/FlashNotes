@@ -89,7 +89,7 @@ function Collections() {
 	return (
 		<>
 			<ScrollableContainer>
-				<Stack gap={4}>
+				<Stack gap={4} pt={14}>
 					{collections?.data.length === 0 ? (
 						<EmptyState
 							title={t("routes.layout.index.readyToStartLearning")}
