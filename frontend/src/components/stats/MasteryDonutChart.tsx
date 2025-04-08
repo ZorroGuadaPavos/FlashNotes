@@ -9,26 +9,68 @@ import {
 	Tooltip,
 } from "recharts";
 
+import type { CollectionBasicInfo, PracticeSessionStats } from "@/client";
+
 interface SessionDataPoint {
 	name: string;
 	value: number;
 	color: string;
 }
 
-interface SessionBreakdownDonutChartProps {
-	sessionData?: SessionDataPoint[];
-	totalValue?: number;
+interface MasteryDonutChartProps {
+	recentSessions: PracticeSessionStats[];
+	collectionInfo: CollectionBasicInfo;
 	title?: string;
 }
 
-const SessionBreakdownDonutChart = ({
-	sessionData = [],
-	totalValue = 0,
+const MasteryDonutChart = ({
+	recentSessions,
+	collectionInfo,
 	title,
-}: SessionBreakdownDonutChartProps) => {
+}: MasteryDonutChartProps) => {
 	const { t } = useTranslation();
 
-	if (!sessionData || sessionData.length === 0) {
+	const latestSession = recentSessions.length > 0 ? recentSessions[0] : null;
+	const totalCards = collectionInfo.total_cards;
+
+	let sessionBreakdownData: SessionDataPoint[] = [];
+	if (latestSession && totalCards > 0) {
+		const correctCount = latestSession.correct_answers;
+		const incorrectCount =
+			latestSession.cards_practiced - latestSession.correct_answers;
+		const notPracticedCount = Math.max(
+			0,
+			totalCards - latestSession.cards_practiced,
+		);
+
+		sessionBreakdownData = [
+			{
+				name: t("components.stats.correct"),
+				value: correctCount,
+				color: "#38A169",
+			},
+			{
+				name: t("components.stats.incorrect"),
+				value: incorrectCount,
+				color: "#E53E3E",
+			},
+			{
+				name: t("components.stats.notPracticedInSession"),
+				value: notPracticedCount,
+				color: "#A0AEC0",
+			},
+		].filter((item) => item.value >= 0);
+	} else if (totalCards > 0) {
+		sessionBreakdownData = [
+			{
+				name: t("components.stats.notPracticedYet"),
+				value: totalCards,
+				color: "#A0AEC0",
+			},
+		];
+	}
+
+	if (sessionBreakdownData.length === 0) {
 		return (
 			<Box p={6} borderWidth="1px" borderRadius="lg" bg="bg.50" h="100%">
 				<Heading size="md" mb={4}>
@@ -46,15 +88,17 @@ const SessionBreakdownDonutChart = ({
 			<Heading size="md" mb={4}>
 				{title || t("components.stats.latestSessionBreakdown")}
 			</Heading>
-			<Flex direction="column" align="center" h="300px">
+			<Flex direction="column" align="center" justify="center" h="100%">
 				<ResponsiveContainer width="100%" height="85%">
 					<PieChart>
 						<Pie
-							data={sessionData}
+							data={sessionBreakdownData}
 							dataKey="value"
 							cx="50%"
 							cy="50%"
-							innerRadius="60%"
+							innerRadius="55%"
+							outerRadius="90%"
+							paddingAngle={2}
 							labelLine={false}
 							label={({
 								cx,
@@ -83,7 +127,7 @@ const SessionBreakdownDonutChart = ({
 								) : null;
 							}}
 						>
-							{sessionData.map((entry) => (
+							{sessionBreakdownData.map((entry) => (
 								<Cell
 									key={`cell-${entry.name}`}
 									fill={entry.color}
@@ -115,11 +159,11 @@ const SessionBreakdownDonutChart = ({
 					</PieChart>
 				</ResponsiveContainer>
 				<Text fontWeight="bold" fontSize="xl" mt={-4}>
-					{totalValue} {t("general.words.cards")}
+					{totalCards} {t("general.words.cards")}
 				</Text>
 			</Flex>
 		</Box>
 	);
 };
 
-export default SessionBreakdownDonutChart;
+export default MasteryDonutChart;

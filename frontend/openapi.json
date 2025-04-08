@@ -910,6 +910,7 @@
       },
       "CollectionBasicInfo": {
         "properties": {
+          "name": { "type": "string", "title": "Name" },
           "total_cards": { "type": "integer", "title": "Total Cards" },
           "total_practice_sessions": {
             "type": "integer",
@@ -917,7 +918,7 @@
           }
         },
         "type": "object",
-        "required": ["total_cards", "total_practice_sessions"],
+        "required": ["name", "total_cards", "total_practice_sessions"],
         "title": "CollectionBasicInfo"
       },
       "CollectionCreate": {

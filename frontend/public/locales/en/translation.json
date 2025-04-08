@@ -39,6 +39,8 @@
 			"failedOutOfAttempts": "Failed {{failed}} out of {{total}} attempts",
 			"practiceTheseCards": "Focus on practicing these cards to improve your results",
 			"practiceSessions": "Practice Sessions",
+			"averageAccuracy": "Average Accuracy",
+			"allSessions": "all sessions",
 			"successRate": "Success Rate",
 			"studyStreak": "Study Streak",
 			"days": "days",
@@ -48,7 +50,12 @@
 			"notPracticedYet": "Not Practiced Yet",
 			"noDataAvailable": "No data available for this chart",
 			"lastSession": "Last session",
-			"noRecentSessions": "No recent sessions"
+			"noRecentSessions": "No recent sessions",
+			"learningTrend": "Learning Trend",
+			"comparedToPrevious": "compared to previous",
+			"notEnoughData": "not enough data",
+			"successRateTooltip": "Percentage of correct answers in your most recent session",
+			"learningTrendTooltip": "Change in success rate between your two most recent sessions"
 		}
 	},
 	"general": {
@@ -120,6 +127,7 @@
 			"password": "Password",
 			"statistics": "Statistics",
 			"totalCards": "Total Cards",
+			"cards": "cards",
 			"version": "Version"
 		}
 	},

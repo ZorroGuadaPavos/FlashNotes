@@ -3,6 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import type { CardBasicStats } from "@/client";
 
+// Helper function to strip HTML tags
+const stripHtml = (html: string): string => {
+	// Simple regex to remove HTML tags
+	return html.replace(/<[^>]*>/g, "");
+};
+
 interface FailedCardData {
 	id: string;
 	title: string;
@@ -27,7 +33,7 @@ const MostFailedCards = ({ cards, title }: MostFailedCardsProps) => {
 					: 0;
 			return {
 				id: card.id.toString(),
-				title: card.front,
+				title: stripHtml(card.front),
 				failRate,
 				totalAttempts: card.total_attempts,
 				correctAnswers: card.correct_answers,
