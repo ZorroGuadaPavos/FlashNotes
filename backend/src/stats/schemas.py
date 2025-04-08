@@ -5,6 +5,7 @@ from sqlmodel import SQLModel
 
 
 class CollectionBasicInfo(SQLModel):
+    name: str
     total_cards: int
     total_practice_sessions: int
 

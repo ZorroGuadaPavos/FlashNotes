@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Float, case, func
 from sqlmodel import Session, select
 
-from src.flashcards.models import Card, PracticeCard, PracticeSession
+from src.flashcards.models import Card, Collection, PracticeCard, PracticeSession
 
 from .schemas import (
     CardBasicStats,
@@ -17,6 +17,12 @@ from .schemas import (
 def _get_collection_basic_info(
     session: Session, collection_id: uuid.UUID
 ) -> CollectionBasicInfo:
+    collection = session.get(Collection, collection_id)
+    if not collection:
+        raise ValueError(
+            f"Collection with id {collection_id} not found in _get_collection_basic_info"
+        )
+    collection_name = collection.name
     total_cards_stmt = select(func.count(Card.id)).where(
         Card.collection_id == collection_id
     )
@@ -28,6 +34,7 @@ def _get_collection_basic_info(
     total_sessions = session.exec(total_sessions_stmt).one()
 
     return CollectionBasicInfo(
+        name=collection_name,
         total_cards=total_cards,
         total_practice_sessions=total_sessions,
     )
@@ -67,7 +74,7 @@ def _get_difficult_cards(
     collection_id: uuid.UUID,
     recent_date: datetime,
     min_attempts: int = 2,
-    limit: int = 10,
+    limit: int = 5,
 ) -> list[CardBasicStats]:
     statement = (
         select(
