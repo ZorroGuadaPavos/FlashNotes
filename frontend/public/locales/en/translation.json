@@ -25,6 +25,34 @@
 		"practiceComplete": {
 			"cardsCorrect": "You got {{correct}} out of {{total}} cards correct",
 			"title": "Practice Complete"
+		},
+		"stats": {
+			"performanceOverTime": "Performance Over Time",
+			"correctRate": "Correct Rate",
+			"cardsReviewed": "Cards Reviewed",
+			"masteryDistribution": "Mastery Distribution",
+			"recentPracticeSessions": "Recent Practice Sessions",
+			"correctAnswers": "Correct Answers",
+			"incorrectAnswers": "Incorrect Answers",
+			"session": "Session",
+			"mostFailedCards": "Most Failed Cards",
+			"failedOutOfAttempts": "Failed {{failed}} out of {{total}} attempts",
+			"practiceTheseCards": "Focus on practicing these cards to improve your results",
+			"noActivity": "No activity",
+			"cardsStudied": "cards studied",
+			"averageScore": "Average Score",
+			"basicInfo": "Basic Information",
+			"cardsInProgress": "Cards In Progress",
+			"cardsMastered": "Cards Mastered",
+			"cardsToReview": "Cards To Review",
+			"difficultyDistribution": "Difficulty Distribution",
+			"practiceStatistics": "Practice Statistics",
+			"successRate": "Success Rate",
+			"totalPracticeSessions": "Total Practice Sessions",
+			"studyProgress": "Study Progress",
+			"practiceSessions": "Practice Sessions",
+			"studyStreak": "Study Streak",
+			"days": "days"
 		}
 	},
 	"general": {

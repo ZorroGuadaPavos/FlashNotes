@@ -25,6 +25,34 @@
 		"practiceComplete": {
 			"cardsCorrect": "Je hebt {{correct}} van de {{total}} kaarten goed",
 			"title": "Oefening Voltooid"
+		},
+		"stats": {
+			"performanceOverTime": "Prestaties Over Tijd",
+			"correctRate": "Correcte Score",
+			"cardsReviewed": "Kaarten Bekeken",
+			"masteryDistribution": "Beheersingsverdeling",
+			"recentPracticeSessions": "Recente Oefensessies",
+			"correctAnswers": "Juiste Antwoorden",
+			"incorrectAnswers": "Onjuiste Antwoorden",
+			"session": "Sessie",
+			"mostFailedCards": "Meest Gefaalde Kaarten",
+			"failedOutOfAttempts": "{{failed}} van de {{total}} pogingen gefaald",
+			"practiceTheseCards": "Focus op het oefenen van deze kaarten om je resultaten te verbeteren",
+			"noActivity": "Geen activiteit",
+			"cardsStudied": "kaarten bestudeerd",
+			"averageScore": "Gemiddelde Score",
+			"basicInfo": "Basisinformatie",
+			"cardsInProgress": "Kaarten in Behandeling",
+			"cardsMastered": "Beheerde Kaarten",
+			"cardsToReview": "Kaarten om te Herzien",
+			"difficultyDistribution": "Moeilijkheidsverdeling",
+			"practiceStatistics": "Oefenstatistieken",
+			"successRate": "Succespercentage",
+			"totalPracticeSessions": "Totaal Aantal Oefensessies",
+			"studyProgress": "Studievoortgang",
+			"practiceSessions": "Oefensessies",
+			"studyStreak": "Studiestreak",
+			"days": "dagen"
 		}
 	},
 	"general": {

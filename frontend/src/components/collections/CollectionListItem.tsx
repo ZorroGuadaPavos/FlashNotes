@@ -1,8 +1,10 @@
 import type { Collection } from "@/client";
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
+import { useNavigate } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdAnalytics } from "react-icons/md";
 import { DefaultInput } from "../commonUI/Input";
 import CollectionKebabMenu from "./CollectionKebabMenu";
 
@@ -18,6 +20,7 @@ function CollectionListItem({
 	onRename,
 }: CollectionListItemProps) {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedName, setEditedName] = useState(collection.name);
 
@@ -40,6 +43,11 @@ function CollectionListItem({
 			setEditedName(collection.name);
 			setIsEditing(false);
 		}
+	};
+
+	const handleStatsClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		navigate({ to: `/collections/${collection.id}/stats` });
 	};
 
 	return (
@@ -86,13 +94,22 @@ function CollectionListItem({
 						: t("general.words.noCardsAdded")}
 				</Text>
 			</Box>
-			<Box p=".5rem">
+			<HStack p=".5rem" gap={1}>
+				<IconButton
+					aria-label={t("general.words.statistics")}
+					variant="ghost"
+					_hover={{ bg: "bg.100" }}
+					size="md"
+					onClick={handleStatsClick}
+				>
+					<MdAnalytics size={20} />
+				</IconButton>
 				<CollectionKebabMenu
 					collectionId={collection.id}
 					onDelete={onDelete}
 					onRename={handleEdit}
 				/>
-			</Box>
+			</HStack>
 		</HStack>
 	);
 }

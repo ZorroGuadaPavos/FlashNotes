@@ -25,6 +25,34 @@
 		"practiceComplete": {
 			"cardsCorrect": "Has acertado {{correct}} de {{total}} tarjetas",
 			"title": "Práctica Completa"
+		},
+		"stats": {
+			"performanceOverTime": "Rendimiento a lo Largo del Tiempo",
+			"correctRate": "Tasa de Aciertos",
+			"cardsReviewed": "Tarjetas Revisadas",
+			"masteryDistribution": "Distribución de Dominio",
+			"recentPracticeSessions": "Sesiones de Práctica Recientes",
+			"correctAnswers": "Respuestas Correctas",
+			"incorrectAnswers": "Respuestas Incorrectas",
+			"session": "Sesión",
+			"mostFailedCards": "Tarjetas con Más Fallos",
+			"failedOutOfAttempts": "Fallos en {{failed}} de {{total}} intentos",
+			"practiceTheseCards": "Concéntrate en practicar estas tarjetas para mejorar tus resultados",
+			"noActivity": "Sin actividad",
+			"cardsStudied": "tarjetas estudiadas",
+			"averageScore": "Puntuación Promedio",
+			"basicInfo": "Información Básica",
+			"cardsInProgress": "Tarjetas en Progreso",
+			"cardsMastered": "Tarjetas Dominadas",
+			"cardsToReview": "Tarjetas para Revisar",
+			"difficultyDistribution": "Distribución de Dificultad",
+			"practiceStatistics": "Estadísticas de Práctica",
+			"successRate": "Tasa de Éxito",
+			"totalPracticeSessions": "Total de Sesiones de Práctica",
+			"studyProgress": "Progreso de Estudio",
+			"practiceSessions": "Sesiones de Práctica",
+			"studyStreak": "Racha de Estudio",
+			"days": "días"
 		}
 	},
 	"general": {
