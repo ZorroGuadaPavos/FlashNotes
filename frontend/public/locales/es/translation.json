@@ -29,30 +29,26 @@
 		"stats": {
 			"performanceOverTime": "Rendimiento a lo Largo del Tiempo",
 			"correctRate": "Tasa de Aciertos",
-			"cardsReviewed": "Tarjetas Revisadas",
-			"masteryDistribution": "Distribución de Dominio",
+			"cardsPracticed": "Tarjetas Practicadas",
+			"latestSessionBreakdown": "Desglose Última Sesión",
 			"recentPracticeSessions": "Sesiones de Práctica Recientes",
 			"correctAnswers": "Respuestas Correctas",
 			"incorrectAnswers": "Respuestas Incorrectas",
 			"session": "Sesión",
 			"mostFailedCards": "Tarjetas con Más Fallos",
-			"failedOutOfAttempts": "Fallos en {{failed}} de {{total}} intentos",
+			"failedOutOfAttempts": "Fallaste {{failed}} de {{total}} intentos",
 			"practiceTheseCards": "Concéntrate en practicar estas tarjetas para mejorar tus resultados",
-			"noActivity": "Sin actividad",
-			"cardsStudied": "tarjetas estudiadas",
-			"averageScore": "Puntuación Promedio",
-			"basicInfo": "Información Básica",
-			"cardsInProgress": "Tarjetas en Progreso",
-			"cardsMastered": "Tarjetas Dominadas",
-			"cardsToReview": "Tarjetas para Revisar",
-			"difficultyDistribution": "Distribución de Dificultad",
-			"practiceStatistics": "Estadísticas de Práctica",
-			"successRate": "Tasa de Éxito",
-			"totalPracticeSessions": "Total de Sesiones de Práctica",
-			"studyProgress": "Progreso de Estudio",
 			"practiceSessions": "Sesiones de Práctica",
+			"successRate": "Tasa de Éxito",
 			"studyStreak": "Racha de Estudio",
-			"days": "días"
+			"days": "días",
+			"correct": "Correcto",
+			"incorrect": "Incorrecto",
+			"notPracticedInSession": "No Practicadas",
+			"notPracticedYet": "Aún No Practicadas",
+			"noDataAvailable": "No hay datos disponibles para este gráfico",
+			"lastSession": "Última sesión",
+			"noRecentSessions": "Sin sesiones recientes"
 		}
 	},
 	"general": {
@@ -142,18 +138,6 @@
 			"index": {
 				"readyToStartLearning": "¿Listo para empezar a aprender?",
 				"createFirstCollection": "Crea tu primera colección y comienza tu viaje de aprendizaje!"
-			},
-			"stats": {
-				"averageScore": "Puntuación Promedio",
-				"basicInfo": "Información Básica",
-				"cardsInProgress": "Tarjetas en Progreso",
-				"cardsMastered": "Tarjetas Dominadas",
-				"cardsToReview": "Tarjetas para Revisar",
-				"difficultyDistribution": "Distribución de Dificultad",
-				"practiceStatistics": "Estadísticas de Práctica",
-				"successRate": "Tasa de Éxito",
-				"totalPracticeSessions": "Total de Sesiones de Práctica",
-				"studyProgress": "Progreso de Estudio"
 			}
 		},
 		"publicLayout": {
