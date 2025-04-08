@@ -26,9 +26,12 @@ function StatsPage() {
 		isLoading,
 		error,
 	} = useQuery({
-		queryKey: ["collectionStats", collectionId],
+		queryKey: ["collectionStats", collectionId, 7],
 		queryFn: () =>
-			StatsService.getCollectionStatisticsEndpoint({ collectionId }),
+			StatsService.getCollectionStatisticsEndpoint({
+				collectionId,
+				days: 7,
+			}),
 	});
 
 	if (isLoading) return <LoadingState />;
