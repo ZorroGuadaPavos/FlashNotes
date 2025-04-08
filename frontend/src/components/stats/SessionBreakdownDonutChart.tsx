@@ -15,6 +15,15 @@ interface SessionDataPoint {
 	color: string;
 }
 
+interface LegendFormatterEntry {
+	value: string;
+	color?: string;
+
+	payload?: {
+		[key: string]: unknown;
+	};
+}
+
 interface SessionBreakdownDonutChartProps {
 	sessionData?: SessionDataPoint[];
 	totalValue?: number;
@@ -55,6 +64,8 @@ const SessionBreakdownDonutChart = ({
 							cx="50%"
 							cy="50%"
 							innerRadius="60%"
+							outerRadius="85%"
+							paddingAngle={2}
 							labelLine={false}
 							label={({
 								cx,
@@ -63,6 +74,13 @@ const SessionBreakdownDonutChart = ({
 								innerRadius,
 								outerRadius,
 								percent,
+							}: {
+								cx: number;
+								cy: number;
+								midAngle: number;
+								innerRadius: number;
+								outerRadius: number;
+								percent: number;
 							}) => {
 								const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
 								const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
@@ -83,7 +101,7 @@ const SessionBreakdownDonutChart = ({
 								) : null;
 							}}
 						>
-							{sessionData.map((entry) => (
+							{sessionData.map((entry: SessionDataPoint) => (
 								<Cell
 									key={`cell-${entry.name}`}
 									fill={entry.color}
@@ -103,8 +121,8 @@ const SessionBreakdownDonutChart = ({
 						<Legend
 							verticalAlign="bottom"
 							height={36}
-							formatter={(value, entry) => {
-								const color = entry?.color;
+							formatter={(value: string, entry: LegendFormatterEntry) => {
+								const color = entry.color;
 								return (
 									<span style={{ color: color || "#000", fontWeight: 500 }}>
 										{value}

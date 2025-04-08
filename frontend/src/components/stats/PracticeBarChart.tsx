@@ -12,45 +12,34 @@ import {
 	YAxis,
 } from "recharts";
 
+import type { PracticeSessionStats } from "@/client";
+
 interface PracticeData {
 	session: string;
 	correct: number;
 	incorrect: number;
 	date: string;
-	successRate: number;
 }
 
-// Generate mock data for recent practice sessions
-const generatePracticeData = (): PracticeData[] => {
-	const data: PracticeData[] = [];
-	for (let i = 1; i <= 6; i++) {
-		const correct = Math.floor(Math.random() * 10 + 5);
-		const incorrect = Math.floor(Math.random() * 5 + 1);
-		const totalCards = correct + incorrect;
-
-		data.push({
-			session: `#${i}`,
-			correct,
-			incorrect,
-			date: new Date(
-				Date.now() - (6 - i) * 24 * 60 * 60 * 1000,
-			).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-			successRate: Math.round((correct / totalCards) * 100),
-		});
-	}
-	return data;
-};
-
 interface PracticeBarChartProps {
-	data?: PracticeData[];
+	sessions?: PracticeSessionStats[];
 	title?: string;
 }
 
-const PracticeBarChart = ({
-	data = generatePracticeData(),
-	title,
-}: PracticeBarChartProps) => {
+const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 	const { t } = useTranslation();
+
+	const chartData: PracticeData[] = (
+		sessions?.map((session, index) => ({
+			session: `#${index + 1}`,
+			correct: session.correct_answers,
+			incorrect: session.cards_practiced - session.correct_answers,
+			date: new Date(session.created_at).toLocaleDateString("en-US", {
+				month: "short",
+				day: "numeric",
+			}),
+		})) || []
+	).reverse();
 
 	return (
 		<Box p={6} borderWidth="1px" borderRadius="lg" bg="bg.50" h="100%">
@@ -60,7 +49,7 @@ const PracticeBarChart = ({
 			<Box h="300px">
 				<ResponsiveContainer width="100%" height="100%">
 					<BarChart
-						data={data}
+						data={chartData}
 						margin={{
 							top: 20,
 							right: 30,
@@ -72,7 +61,7 @@ const PracticeBarChart = ({
 						<XAxis
 							dataKey="session"
 							tick={{ fill: "#718096" }}
-							tickFormatter={(value, index) => data[index].date}
+							tickFormatter={(value, index) => chartData[index]?.date || value}
 						/>
 						<YAxis tick={{ fill: "#718096" }} />
 						<Tooltip
@@ -82,13 +71,13 @@ const PracticeBarChart = ({
 									? t("components.stats.correctAnswers")
 									: t("components.stats.incorrectAnswers"),
 							]}
-							labelFormatter={(value, payload) => {
+							labelFormatter={(label, payload) => {
 								if (payload && payload.length > 0) {
-									const index = payload[0].payload;
-									const session = data.find((d) => d.session === value);
-									return `${t("components.stats.session")} ${value} - ${session?.date || ""}`;
+									const sessionData = payload[0].payload as PracticeData;
+
+									return `${t("components.stats.session")} ${sessionData.session} - ${sessionData.date}`;
 								}
-								return value;
+								return label;
 							}}
 							contentStyle={{
 								backgroundColor: "rgba(255, 255, 255, 0.95)",

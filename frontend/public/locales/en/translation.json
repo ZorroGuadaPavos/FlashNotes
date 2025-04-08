@@ -29,8 +29,8 @@
 		"stats": {
 			"performanceOverTime": "Performance Over Time",
 			"correctRate": "Correct Rate",
-			"cardsReviewed": "Cards Reviewed",
-			"masteryDistribution": "Mastery Distribution",
+			"cardsPracticed": "Cards Practiced",
+			"latestSessionBreakdown": "Latest Session Breakdown",
 			"recentPracticeSessions": "Recent Practice Sessions",
 			"correctAnswers": "Correct Answers",
 			"incorrectAnswers": "Incorrect Answers",
@@ -38,21 +38,17 @@
 			"mostFailedCards": "Most Failed Cards",
 			"failedOutOfAttempts": "Failed {{failed}} out of {{total}} attempts",
 			"practiceTheseCards": "Focus on practicing these cards to improve your results",
-			"noActivity": "No activity",
-			"cardsStudied": "cards studied",
-			"averageScore": "Average Score",
-			"basicInfo": "Basic Information",
-			"cardsInProgress": "Cards In Progress",
-			"cardsMastered": "Cards Mastered",
-			"cardsToReview": "Cards To Review",
-			"difficultyDistribution": "Difficulty Distribution",
-			"practiceStatistics": "Practice Statistics",
-			"successRate": "Success Rate",
-			"totalPracticeSessions": "Total Practice Sessions",
-			"studyProgress": "Study Progress",
 			"practiceSessions": "Practice Sessions",
+			"successRate": "Success Rate",
 			"studyStreak": "Study Streak",
-			"days": "days"
+			"days": "days",
+			"correct": "Correct",
+			"incorrect": "Incorrect",
+			"notPracticedInSession": "Not Practiced",
+			"notPracticedYet": "Not Practiced Yet",
+			"noDataAvailable": "No data available for this chart",
+			"lastSession": "Last session",
+			"noRecentSessions": "No recent sessions"
 		}
 	},
 	"general": {
@@ -142,18 +138,6 @@
 			"index": {
 				"readyToStartLearning": "Ready to start learning?",
 				"createFirstCollection": "Create your first collection and begin your learning journey!"
-			},
-			"stats": {
-				"averageScore": "Average Score",
-				"basicInfo": "Basic Information",
-				"cardsInProgress": "Cards In Progress",
-				"cardsMastered": "Cards Mastered",
-				"cardsToReview": "Cards To Review",
-				"difficultyDistribution": "Difficulty Distribution",
-				"practiceStatistics": "Practice Statistics",
-				"successRate": "Success Rate",
-				"totalPracticeSessions": "Total Practice Sessions",
-				"studyProgress": "Study Progress"
 			}
 		},
 		"publicLayout": {

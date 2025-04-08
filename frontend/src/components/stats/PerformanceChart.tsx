@@ -11,32 +11,41 @@ import {
 	YAxis,
 } from "recharts";
 
+import type { PracticeSessionStats } from "@/client";
+
 interface PerformanceData {
-	day: string;
+	label: string;
 	correctRate: number;
-	cardsReviewed: number;
+	cardsPracticed: number;
 }
 
-// Mock data for performance chart
-const generatePerformanceData = (): PerformanceData[] => {
-	const dates = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-	return dates.map((day) => ({
-		day,
-		correctRate: Math.floor(55 + Math.random() * 30),
-		cardsReviewed: Math.floor(10 + Math.random() * 25),
-	}));
-};
-
 interface PerformanceChartProps {
-	data?: PerformanceData[];
+	sessions?: PracticeSessionStats[];
 	title?: string;
 }
 
-const PerformanceChart = ({
-	data = generatePerformanceData(),
-	title,
-}: PerformanceChartProps) => {
+const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 	const { t } = useTranslation();
+
+	const chartData: PerformanceData[] = (
+		sessions?.map((session, index) => {
+			const correctRate =
+				session.cards_practiced > 0
+					? Math.round(
+							(session.correct_answers / session.cards_practiced) * 100,
+						)
+					: 0;
+			const dateStr = new Date(session.created_at).toLocaleDateString("en-US", {
+				month: "short",
+				day: "numeric",
+			});
+			return {
+				label: `#${index + 1} (${dateStr})`,
+				correctRate,
+				cardsPracticed: session.cards_practiced,
+			};
+		}) || []
+	).reverse();
 
 	return (
 		<Box p={6} borderWidth="1px" borderRadius="lg" bg="bg.50" h="100%">
@@ -46,7 +55,7 @@ const PerformanceChart = ({
 			<Box h="300px">
 				<ResponsiveContainer width="100%" height="100%">
 					<LineChart
-						data={data}
+						data={chartData}
 						margin={{
 							top: 5,
 							right: 30,
@@ -55,7 +64,11 @@ const PerformanceChart = ({
 						}}
 					>
 						<CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-						<XAxis dataKey="day" tick={{ fill: "#718096" }} />
+						<XAxis
+							dataKey="label"
+							tick={{ fill: "#718096", fontSize: 12 }}
+							tickFormatter={(value) => value.split(" ")[0]}
+						/>
 						<YAxis
 							yAxisId="left"
 							tick={{ fill: "#718096" }}
@@ -65,8 +78,19 @@ const PerformanceChart = ({
 							yAxisId="right"
 							orientation="right"
 							tick={{ fill: "#718096" }}
+							allowDecimals={false}
 						/>
 						<Tooltip
+							formatter={(value, name) => {
+								if (name === "correctRate") {
+									return [`${value}%`, t("components.stats.correctRate")];
+								}
+								if (name === "cardsPracticed") {
+									return [value, t("components.stats.cardsPracticed")];
+								}
+								return [value, name];
+							}}
+							labelFormatter={(label) => label}
 							contentStyle={{
 								backgroundColor: "rgba(255, 255, 255, 0.95)",
 								borderRadius: "8px",
@@ -88,11 +112,11 @@ const PerformanceChart = ({
 						<Line
 							yAxisId="right"
 							type="monotone"
-							dataKey="cardsReviewed"
+							dataKey="cardsPracticed"
 							stroke="#4299E1"
 							strokeWidth={2}
 							dot={{ strokeWidth: 2, r: 4, fill: "#4299E1" }}
-							name={t("components.stats.cardsReviewed")}
+							name={t("components.stats.cardsPracticed")}
 						/>
 					</LineChart>
 				</ResponsiveContainer>
