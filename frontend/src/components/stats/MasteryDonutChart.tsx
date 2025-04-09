@@ -32,7 +32,10 @@ const MasteryDonutChart = ({
 
 	const showLegend = useBreakpointValue({ base: false, md: true });
 
-	const latestSession = recentSessions.length > 0 ? recentSessions[0] : null;
+	const latestSession =
+		recentSessions.length > 0
+			? recentSessions[recentSessions.length - 1]
+			: null;
 	const totalCards = collectionInfo.total_cards;
 
 	let sessionBreakdownData: SessionDataPoint[] = [];
@@ -49,17 +52,17 @@ const MasteryDonutChart = ({
 			{
 				name: t("components.stats.correct"),
 				value: correctCount,
-				color: "#38A169",
+				color: "var(--chakra-colors-stat-positive)",
 			},
 			{
 				name: t("components.stats.incorrect"),
 				value: incorrectCount,
-				color: "#E53E3E",
+				color: "var(--chakra-colors-stat-negative)",
 			},
 			{
 				name: t("components.stats.notPracticedInSession"),
 				value: notPracticedCount,
-				color: "#A0AEC0",
+				color: "var(--chakra-colors-stat-neutral)",
 			},
 		].filter((item) => item.value >= 0);
 	} else if (totalCards > 0) {
@@ -67,7 +70,7 @@ const MasteryDonutChart = ({
 			{
 				name: t("components.stats.notPracticedYet"),
 				value: totalCards,
-				color: "#A0AEC0",
+				color: "var(--chakra-colors-stat-neutral)",
 			},
 		];
 	}
@@ -140,10 +143,10 @@ const MasteryDonutChart = ({
 						<Tooltip
 							formatter={(value, name) => [`${value} cards`, name]}
 							contentStyle={{
-								backgroundColor: "rgba(255, 255, 255, 0.95)",
+								backgroundColor: "white",
 								borderRadius: "8px",
 								boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-								border: "1px solid #e2e8f0",
+								border: "1px solid var(--chakra-colors-gray-200)",
 							}}
 						/>
 						{showLegend && (

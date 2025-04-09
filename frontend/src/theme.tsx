@@ -73,6 +73,29 @@ const config = defineConfig({
 						value: "#2E493F",
 					},
 				},
+				stat: {
+					positive: {
+						value: {
+							_light: "#38A169",
+							_dark: "#38A169",
+						},
+					},
+					negative: {
+						value: { _light: "#E53E3E", _dark: "#E53E3E" },
+					},
+					neutral: {
+						value: { _light: "#A0AEC0", _dark: "#A0AEC0" },
+					},
+					primaryData: {
+						value: { _light: "{colors.teal.400}", _dark: "{colors.teal.200}" },
+					},
+					secondaryData: {
+						value: { _light: "{colors.blue.400}", _dark: "{colors.blue.200}" },
+					},
+					axis: {
+						value: { _light: "{colors.gray.500}", _dark: "{colors.gray.400}" },
+					},
+				},
 			},
 		},
 	},

@@ -1,4 +1,4 @@
-import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
 	Bar,
@@ -15,10 +15,9 @@ import {
 import type { PracticeSessionStats } from "@/client";
 
 interface PracticeData {
-	session: string;
+	label: string;
 	correct: number;
 	incorrect: number;
-	date: string;
 }
 
 interface PracticeBarChartProps {
@@ -27,20 +26,23 @@ interface PracticeBarChartProps {
 }
 
 const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const showAxisAndLegend = useBreakpointValue({ base: false, md: true });
-
-	const chartData: PracticeData[] = (
-		sessions?.map((session, index) => ({
-			session: `#${index + 1}`,
-			correct: session.correct_answers,
-			incorrect: session.cards_practiced - session.correct_answers,
-			date: new Date(session.created_at).toLocaleDateString("en-US", {
-				month: "short",
-				day: "numeric",
-			}),
-		})) || []
-	).reverse();
+	const chartData: PracticeData[] =
+		sessions?.map((session, index) => {
+			const dateStr = new Date(session.created_at).toLocaleDateString(
+				i18n.language,
+				{
+					month: "short",
+					day: "numeric",
+				},
+			);
+			return {
+				label: `#${index + 1} (${dateStr})`,
+				correct: session.correct_answers,
+				incorrect: session.cards_practiced - session.correct_answers,
+			};
+		}) || [];
 
 	return (
 		<Box p={6} borderWidth="1px" borderRadius="lg" bg="bg.50" h="100%">
@@ -61,34 +63,34 @@ const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 						<CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
 						{showAxisAndLegend && (
 							<XAxis
-								dataKey="session"
-								tick={{ fill: "#718096" }}
-								tickFormatter={(value, index) =>
-									chartData[index]?.date || value
-								}
+								dataKey="label"
+								tick={{ fill: "var(--chakra-colors-stat-axis)", fontSize: 12 }}
+								tickFormatter={(_value, index) => `#${index + 1}`}
 							/>
 						)}
-						{showAxisAndLegend && <YAxis tick={{ fill: "#718096" }} />}
+						{showAxisAndLegend && (
+							<YAxis tick={{ fill: "var(--chakra-colors-stat-axis)" }} />
+						)}
 						<Tooltip
+							cursor={{ fill: "var(--chakra-colors-bg-100)" }}
 							formatter={(value, name) => [
 								value,
 								name === "correct"
 									? t("components.stats.correctAnswers")
 									: t("components.stats.incorrectAnswers"),
 							]}
-							labelFormatter={(label, payload) => {
-								if (payload && payload.length > 0) {
-									const sessionData = payload[0].payload as PracticeData;
-
-									return `${t("components.stats.session")} ${sessionData.session} - ${sessionData.date}`;
-								}
-								return label;
+							labelFormatter={(label) => {
+								return (
+									<Text color="fg.muted" fontWeight="semibold">
+										{label}
+									</Text>
+								);
 							}}
 							contentStyle={{
-								backgroundColor: "rgba(255, 255, 255, 0.95)",
+								backgroundColor: "white",
 								borderRadius: "8px",
 								boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-								border: "1px solid #e2e8f0",
+								border: "1px solid var(--chakra-colors-gray-200)",
 							}}
 						/>
 						{showAxisAndLegend && (
@@ -101,8 +103,16 @@ const PracticeBarChart = ({ sessions, title }: PracticeBarChartProps) => {
 							/>
 						)}
 						<ReferenceLine y={0} stroke="#000" />
-						<Bar dataKey="correct" fill="#38A169" radius={[4, 4, 0, 0]} />
-						<Bar dataKey="incorrect" fill="#E53E3E" radius={[4, 4, 0, 0]} />
+						<Bar
+							dataKey="correct"
+							fill="var(--chakra-colors-stat-positive)"
+							radius={[4, 4, 0, 0]}
+						/>
+						<Bar
+							dataKey="incorrect"
+							fill="var(--chakra-colors-stat-negative)"
+							radius={[4, 4, 0, 0]}
+						/>
 					</BarChart>
 				</ResponsiveContainer>
 			</Box>
