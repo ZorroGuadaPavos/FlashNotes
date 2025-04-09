@@ -25,6 +25,37 @@
 		"practiceComplete": {
 			"cardsCorrect": "Has acertado {{correct}} de {{total}} tarjetas",
 			"title": "Práctica Completa"
+		},
+		"stats": {
+			"performanceOverTime": "Rendimiento a lo Largo del Tiempo",
+			"correctRate": "Tasa de Aciertos",
+			"cardsPracticed": "Tarjetas Practicadas",
+			"latestSessionBreakdown": "Desglose Última Sesión",
+			"recentPracticeSessions": "Sesiones de Práctica Recientes",
+			"correctAnswers": "Respuestas Correctas",
+			"incorrectAnswers": "Respuestas Incorrectas",
+			"session": "Sesión",
+			"mostFailedCards": "Tarjetas con Más Fallos",
+			"failedOutOfAttempts": "Fallaste {{failed}} de {{total}} intentos",
+			"practiceTheseCards": "Concéntrate en practicar estas tarjetas para mejorar tus resultados",
+			"practiceSessions": "Sesiones de Práctica",
+			"averageAccuracy": "Precisión Promedio",
+			"allSessions": "todas las sesiones",
+			"successRate": "Tasa de Éxito",
+			"studyStreak": "Racha de Estudio",
+			"days": "días",
+			"correct": "Correcto",
+			"incorrect": "Incorrecto",
+			"notPracticedInSession": "No Practicadas",
+			"notPracticedYet": "Aún No Practicadas",
+			"noDataAvailable": "No hay datos disponibles para este gráfico",
+			"lastSession": "Última sesión",
+			"noRecentSessions": "Sin sesiones recientes",
+			"learningTrend": "Tendencia de Aprendizaje",
+			"comparedToPrevious": "comparado con anterior",
+			"notEnoughData": "datos insuficientes",
+			"successRateTooltip": "Porcentaje de respuestas correctas en tu sesión más reciente",
+			"learningTrendTooltip": "Cambio en la tasa de éxito entre tus dos sesiones más recientes"
 		}
 	},
 	"general": {
@@ -55,7 +86,8 @@
 			"signUp": "Registrarse",
 			"startPracticing": "Comenzar a Practicar",
 			"toggleColorMode": "Cambiar modo de color",
-			"rename": "Renombrar"
+			"rename": "Renombrar",
+			"practice": "Practicar"
 		},
 		"errors": {
 			"collectionNotFound": "Colección no encontrada",
@@ -96,6 +128,7 @@
 			"password": "Contraseña",
 			"statistics": "Estadísticas",
 			"totalCards": "Total de Tarjetas",
+			"cards": "tarjetas",
 			"version": "Versión"
 		}
 	},
@@ -114,18 +147,6 @@
 			"index": {
 				"readyToStartLearning": "¿Listo para empezar a aprender?",
 				"createFirstCollection": "Crea tu primera colección y comienza tu viaje de aprendizaje!"
-			},
-			"stats": {
-				"averageScore": "Puntuación Promedio",
-				"basicInfo": "Información Básica",
-				"cardsInProgress": "Tarjetas en Progreso",
-				"cardsMastered": "Tarjetas Dominadas",
-				"cardsToReview": "Tarjetas para Revisar",
-				"difficultyDistribution": "Distribución de Dificultad",
-				"practiceStatistics": "Estadísticas de Práctica",
-				"successRate": "Tasa de Éxito",
-				"totalPracticeSessions": "Total de Sesiones de Práctica",
-				"studyProgress": "Progreso de Estudio"
 			}
 		},
 		"publicLayout": {

@@ -1,5 +1,6 @@
 import { FlashcardsService } from "@/client";
 import CardListItem from "@/components/cards/CardIListtem";
+import CollectionActionHeader from "@/components/collections/CollectionActionHeader";
 import EmptyState from "@/components/commonUI/EmptyState";
 import ErrorState from "@/components/commonUI/ErrorState";
 import FloatingActionButton from "@/components/commonUI/FloatingActionButton";
@@ -51,6 +52,11 @@ function CollectionComponent() {
 
 	return (
 		<>
+			<CollectionActionHeader
+				collectionId={collectionId}
+				cardCount={cards.length}
+			/>
+
 			<ScrollableContainer>
 				<Stack gap="4">
 					{cards.length === 0 ? (
@@ -80,6 +86,7 @@ function CollectionComponent() {
 
 			<FloatingActionButton
 				icon={<VscAdd color="white" />}
+				position="right"
 				aria-label={t("general.actions.addCard")}
 				onClick={() =>
 					navigate({ to: `/collections/${collectionId}/cards/new` })
