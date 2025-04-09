@@ -1,4 +1,4 @@
-import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
@@ -25,11 +25,11 @@ interface PerformanceChartProps {
 }
 
 const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const showAxisAndLegend = useBreakpointValue({ base: false, md: true });
 
-	const chartData: PerformanceData[] = (
+	const chartData: PerformanceData[] =
 		sessions?.map((session, index) => {
 			const correctRate =
 				session.cards_practiced > 0
@@ -37,17 +37,19 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 							(session.correct_answers / session.cards_practiced) * 100,
 						)
 					: 0;
-			const dateStr = new Date(session.created_at).toLocaleDateString("en-US", {
-				month: "short",
-				day: "numeric",
-			});
+			const dateStr = new Date(session.created_at).toLocaleDateString(
+				i18n.language,
+				{
+					month: "short",
+					day: "numeric",
+				},
+			);
 			return {
 				label: `#${index + 1} (${dateStr})`,
 				correctRate: correctRate,
 				cardsPracticed: session.cards_practiced,
 			};
-		}) || []
-	).reverse();
+		}) || [];
 
 	return (
 		<Box p={6} borderWidth="1px" borderRadius="lg" bg="bg.50" h="100%">
@@ -69,14 +71,14 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 						{showAxisAndLegend && (
 							<XAxis
 								dataKey="label"
-								tick={{ fill: "#718096", fontSize: 12 }}
-								tickFormatter={(value) => value.split(" ")[0]}
+								tick={{ fill: "var(--chakra-colors-stat-axis)", fontSize: 12 }}
+								tickFormatter={(_value, index) => `#${index + 1}`}
 							/>
 						)}
 						{showAxisAndLegend && (
 							<YAxis
 								yAxisId="left"
-								tick={{ fill: "#718096" }}
+								tick={{ fill: "var(--chakra-colors-stat-axis)" }}
 								domain={[0, 100]}
 								tickFormatter={(value) => `${value}%`}
 							/>
@@ -85,7 +87,7 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 							<YAxis
 								yAxisId="right"
 								orientation="right"
-								tick={{ fill: "#718096" }}
+								tick={{ fill: "var(--chakra-colors-stat-axis)" }}
 								allowDecimals={false}
 							/>
 						)}
@@ -99,12 +101,18 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 								}
 								return [value, name];
 							}}
-							labelFormatter={(label) => label}
+							labelFormatter={(label) => {
+								return (
+									<Text color="fg.muted" fontWeight="semibold">
+										{label}
+									</Text>
+								);
+							}}
 							contentStyle={{
-								backgroundColor: "rgba(255, 255, 255, 0.95)",
+								backgroundColor: "white",
 								borderRadius: "8px",
 								boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-								border: "1px solid #e2e8f0",
+								border: "1px solid var(--chakra-colors-gray-200)",
 							}}
 						/>
 						{showAxisAndLegend && <Legend />}
@@ -112,10 +120,14 @@ const PerformanceChart = ({ sessions, title }: PerformanceChartProps) => {
 							yAxisId="left"
 							type="monotone"
 							dataKey="correctRate"
-							stroke="#38B2AC"
+							stroke="var(--chakra-colors-stat-neutral)"
 							strokeWidth={3}
-							dot={{ strokeWidth: 2, r: 4, fill: "#38B2AC" }}
-							activeDot={{ r: 8, fill: "#38B2AC" }}
+							dot={{
+								strokeWidth: 2,
+								r: 4,
+								fill: "var(--chakra-colors-stat-neutral)",
+							}}
+							activeDot={{ r: 8, fill: "var(--chakra-colors-stat-neutral)" }}
 							name={t("components.stats.correctRate")}
 						/>
 						<Line

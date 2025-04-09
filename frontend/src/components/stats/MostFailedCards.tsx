@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import type { CardBasicStats } from "@/client";
 
-// Helper function to strip HTML tags
 const stripHtml = (html: string): string => {
-	// Simple regex to remove HTML tags
 	return html.replace(/<[^>]*>/g, "");
 };
 
@@ -61,7 +59,7 @@ const MostFailedCards = ({ cards, title }: MostFailedCardsProps) => {
 							>
 								{card.title}
 							</Text>
-							<Text fontWeight="bold" color="red.500">
+							<Text fontWeight="bold" color="stat.negative">
 								{card.failRate}%
 							</Text>
 						</Flex>
@@ -80,7 +78,7 @@ const MostFailedCards = ({ cards, title }: MostFailedCardsProps) => {
 									top={0}
 									h="100%"
 									w={`${card.failRate}%`}
-									bg="red.500"
+									bg="stat.negative"
 									borderRadius="full"
 								/>
 							</Box>
