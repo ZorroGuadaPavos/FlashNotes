@@ -49,9 +49,8 @@ def _get_recent_sessions(
         .where(
             PracticeSession.collection_id == collection_id,
             PracticeSession.created_at >= recent_date,
-            PracticeSession.is_completed,
         )
-        .order_by(PracticeSession.created_at.desc())
+        .order_by(PracticeSession.created_at.asc())
         .limit(limit)
     )
 
