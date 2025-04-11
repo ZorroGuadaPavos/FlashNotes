@@ -7,42 +7,48 @@ import {
 	DialogHeader,
 	DialogRoot,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Text } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { Text, useDisclosure } from "@chakra-ui/react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BlueButton, RedButton } from "../commonUI/Button";
 import { DefaultInput } from "../commonUI/Input";
 
 interface AiCollectionDialogProps {
 	onAddAi: (prompt: string) => Promise<void>;
-	children: React.ReactNode;
+	isLoading: boolean;
+}
+
+export interface AiCollectionDialogRef {
+	open: () => void;
+	close: () => void;
 }
 
 const MAX_CHARS = 100;
 
-const AiCollectionDialog: React.FC<AiCollectionDialogProps> = ({
-	onAddAi,
-	children,
-}) => {
+const AiCollectionDialog = forwardRef<
+	AiCollectionDialogRef,
+	AiCollectionDialogProps
+>((props, ref) => {
+	const { onAddAi, isLoading } = props;
 	const { t } = useTranslation();
 	const [prompt, setPrompt] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
 	const closeButtonRef = useRef<HTMLButtonElement>(null);
+	const { open, onOpen, onClose } = useDisclosure();
+
+	useImperativeHandle(ref, () => ({
+		open: onOpen,
+		close: onClose,
+	}));
 
 	const handleSubmit = async () => {
-		if (!prompt.trim()) return;
+		if (!prompt.trim() || isLoading) return;
 
 		try {
-			setIsLoading(true);
-			closeButtonRef.current?.click();
 			await onAddAi(prompt);
 			setPrompt("");
 		} catch (error) {
 			console.error("Failed to create AI collection:", error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -51,8 +57,13 @@ const AiCollectionDialog: React.FC<AiCollectionDialogProps> = ({
 			key="add-ai-collection-dialog"
 			placement="center"
 			motionPreset="slide-in-bottom"
+			open={open}
+			onOpenChange={(e) => {
+				if (!e.open && !isLoading) {
+					onClose();
+				}
+			}}
 		>
-			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent bg="bg.50">
 				<DialogHeader>
 					<DialogTitle color="fg.DEFAULT">
@@ -79,7 +90,7 @@ const AiCollectionDialog: React.FC<AiCollectionDialogProps> = ({
 				</DialogBody>
 				<DialogFooter>
 					<DialogActionTrigger asChild>
-						<RedButton onClick={() => setPrompt("")} disabled={isLoading}>
+						<RedButton onClick={onClose} disabled={isLoading}>
 							{t("general.actions.cancel")}
 						</RedButton>
 					</DialogActionTrigger>
@@ -95,6 +106,6 @@ const AiCollectionDialog: React.FC<AiCollectionDialogProps> = ({
 			</DialogContent>
 		</DialogRoot>
 	);
-};
+});
 
 export default AiCollectionDialog;

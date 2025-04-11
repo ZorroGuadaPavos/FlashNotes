@@ -25,6 +25,10 @@
 		"practiceComplete": {
 			"cardsCorrect": "Has acertado {{correct}} de {{total}} tarjetas",
 			"title": "Práctica Completa"
+		},
+		"speedDial": {
+			"closeMenu": "Cerrar menú",
+			"openMenu": "Abrir menú"
 		}
 	},
 	"general": {
@@ -37,6 +41,7 @@
 			"comingSoon": "Próximamente",
 			"confirmPassword": "Confirmar Contraseña",
 			"create": "Crear",
+			"createAiCollection": "Crear con IA",
 			"creating": "Creando",
 			"delete": "Eliminar",
 			"deleteCard": "Eliminar Tarjeta",
