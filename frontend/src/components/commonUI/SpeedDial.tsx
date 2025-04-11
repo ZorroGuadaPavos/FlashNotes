@@ -80,7 +80,6 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
 											onClick();
 											onClose();
 										}}
-										boxShadow="md"
 										animation={`${fadeIn} 0.2s ease-out forwards`}
 										_hover={{ transform: "scale(1.1)" }}
 										_active={{ transform: "scale(0.95)" }}
@@ -111,7 +110,6 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
 						rounded="full"
 						size="2xl"
 						onClick={onToggle}
-						boxShadow="lg"
 						transition="all 0.3s"
 						_hover={{ transform: "scale(1.1)" }}
 						_active={{ transform: "scale(0.95)" }}
