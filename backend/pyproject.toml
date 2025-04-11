@@ -19,6 +19,7 @@ dependencies = [
     "pytest>=8.3.4",
     "bcrypt==4.0.1",
     "google-genai>=1.5.0",
+    "coverage>=7.8.0",
 ]
 [tool.hatch.build.targets.wheel]
 packages = ["src"]

@@ -60,8 +60,8 @@ function Collections() {
 	const addAiCollection = async (prompt: string) => {
 		try {
 			setIsCreatingAiCollection(true);
-			await FlashcardsService.createAiCollection({
-				requestBody: { prompt },
+			await FlashcardsService.createCollection({
+				requestBody: { name: "", prompt: prompt },
 			});
 			queryClient.invalidateQueries({ queryKey: ["collections"] });
 		} catch (error) {

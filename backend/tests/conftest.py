@@ -2,7 +2,8 @@ from collections.abc import Generator
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, delete
+from sqlalchemy.orm import selectinload
+from sqlmodel import Session, select
 
 from src.core.config import settings
 from src.core.db import engine, init_db
@@ -17,11 +18,17 @@ def db() -> Generator[Session, None, None]:
     with Session(engine) as session:
         init_db(session)
         yield session
-        statement = delete(User)
-        session.execute(statement)
-        session.execute(statement)
-        session.execute(statement)
-        session.commit()
+        try:
+            statement = select(User).options(
+                selectinload(User.collections), selectinload(User.practice_sessions)
+            )
+            users = session.exec(statement).all()
+            for user in users:
+                session.delete(user)
+            session.commit()
+        except Exception as e:
+            print(f"Error during cleanup: {e}")
+            session.rollback()
 
 
 @pytest.fixture

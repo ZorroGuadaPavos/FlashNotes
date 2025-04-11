@@ -13,7 +13,7 @@ from . import services
 router = APIRouter()
 
 
-@router.post("/login/access-token")
+@router.post("/tokens")
 def login_access_token(
     session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Token:

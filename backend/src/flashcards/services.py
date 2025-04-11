@@ -2,6 +2,7 @@ import json
 import random
 import uuid
 from datetime import datetime, timezone
+from typing import Literal
 
 from google import genai
 from pydantic import ValidationError
@@ -109,7 +110,7 @@ def get_card_with_collection(
 def _add_card_to_ongoing_sessions(session: Session, card: Card) -> None:
     statement = select(PracticeSession).where(
         PracticeSession.collection_id == card.collection_id,
-        PracticeSession.is_completed == False,
+        PracticeSession.is_completed.is_not(True),
     )
     practice_session = session.exec(statement).first()
 
@@ -155,7 +156,7 @@ def _remove_incomplete_practice_sessions(session: Session, card: Card) -> None:
         .join(PracticeCard, PracticeCard.session_id == PracticeSession.id)
         .where(
             PracticeCard.card_id == card.id,
-            PracticeSession.is_completed == False,
+            PracticeSession.is_completed.is_not(True),
         )
         .distinct()
     )
@@ -267,6 +268,52 @@ def get_or_create_practice_session(
     return practice_session
 
 
+def get_practice_cards(
+    session: Session,
+    practice_session_id: uuid.UUID,
+    status: Literal["pending", "completed", "all"] | None = None,
+    limit: int | None = None,
+    order: Literal["asc", "desc", "random"] | None = None,
+) -> tuple[list[PracticeCard], int]:
+    """Get practice cards for a session, optionally filtering, ordering, and limiting."""
+    base_statement = select(PracticeCard).where(
+        PracticeCard.session_id == practice_session_id
+    )
+
+    if status == "pending":
+        statement = base_statement.where(PracticeCard.is_practiced.is_not(True))
+    elif status == "completed":
+        statement = base_statement.where(PracticeCard.is_practiced.is_(True))
+    else:
+        statement = base_statement
+
+    count_statement = select(func.count()).select_from(statement.subquery())
+    count = session.exec(count_statement).one()
+
+    if order == "asc":
+        statement = statement.order_by(PracticeCard.created_at.asc())
+    elif order == "desc":
+        statement = statement.order_by(PracticeCard.created_at.desc())
+    elif order != "random":
+        if status == "pending":
+            statement = statement.order_by(PracticeCard.created_at)
+        else:
+            statement = statement.order_by(PracticeCard.updated_at.desc())
+
+    if order == "random":
+        practice_cards = session.exec(statement).all()
+        random.shuffle(practice_cards)
+
+        if limit is not None:
+            practice_cards = practice_cards[:limit]
+    else:
+        if limit is not None:
+            statement = statement.limit(limit)
+        practice_cards = session.exec(statement).all()
+
+    return practice_cards, count
+
+
 def get_next_card(
     session: Session, practice_session_id: uuid.UUID
 ) -> tuple[Card, PracticeCard] | None:
@@ -275,7 +322,7 @@ def get_next_card(
         .join(Card, PracticeCard.card_id == Card.id)
         .where(
             PracticeCard.session_id == practice_session_id,
-            PracticeCard.is_practiced == False,
+            PracticeCard.is_practiced.is_not(True),
         )
         .limit(1)
     )
@@ -296,11 +343,13 @@ def get_practice_card(
     return session.exec(statement).first()
 
 
-def submit_card_result(
+def record_practice_card_result(
     session: Session,
     practice_card: PracticeCard,
     is_correct: bool,
 ) -> PracticeCard:
+    was_practiced = practice_card.is_practiced
+
     practice_card.is_correct = is_correct
     practice_card.is_practiced = True
     practice_card.updated_at = datetime.now(timezone.utc)
@@ -308,12 +357,13 @@ def submit_card_result(
 
     practice_session = session.get(PracticeSession, practice_card.session_id)
     if practice_session:
-        practice_session.cards_practiced += 1
-        if is_correct:
-            practice_session.correct_answers += 1
+        if not was_practiced:
+            practice_session.cards_practiced += 1
+            if is_correct:
+                practice_session.correct_answers += 1
 
-        if practice_session.cards_practiced == practice_session.total_cards:
-            practice_session.is_completed = True
+            if practice_session.cards_practiced == practice_session.total_cards:
+                practice_session.is_completed = True
 
         practice_session.updated_at = datetime.now(timezone.utc)
         session.add(practice_session)
