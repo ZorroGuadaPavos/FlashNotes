@@ -7,7 +7,8 @@ from sqlmodel import Field, Relationship, SQLModel
 class Collection(SQLModel, table=True):
     id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(index=True)
-    user_id: uuid.UUID = Field(index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
+    user: "User" = Relationship(back_populates="collections")
     cards: list["Card"] = Relationship(back_populates="collection", cascade_delete=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -32,7 +33,8 @@ class Card(SQLModel, table=True):
 class PracticeSession(SQLModel, table=True):
     id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
     collection_id: uuid.UUID = Field(foreign_key="collection.id")
-    user_id: uuid.UUID = Field(index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
+    user: "User" = Relationship(back_populates="practice_sessions")
     is_completed: bool = Field(default=False)
     total_cards: int = Field(default=0)
     cards_practiced: int = Field(default=0)
@@ -55,3 +57,7 @@ class PracticeCard(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     session: PracticeSession = Relationship(back_populates="practice_cards")
     card: Card = Relationship(back_populates="practice_cards")
+
+
+# This is needed to resolve forward references
+from src.users.models import User

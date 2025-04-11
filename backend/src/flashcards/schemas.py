@@ -11,7 +11,7 @@ class CollectionBase(SQLModel):
 
 
 class CollectionCreate(CollectionBase):
-    pass
+    prompt: str | None = None
 
 
 class CollectionUpdate(SQLModel):
@@ -57,7 +57,7 @@ class PracticeSessionBase(SQLModel):
     collection_id: uuid.UUID
 
 
-class PracticeSessionCreate(PracticeSessionBase):
+class PracticeSessionCreate(PracticeSessionBase):  # Can be used as the request body
     pass
 
 
@@ -122,3 +122,16 @@ class AIFlashcard(BaseModel):
 class AIFlashcardCollection(BaseModel):
     name: str = PydanticField(description="the simple name of the topic")
     cards: list[AIFlashcard]
+
+
+class PracticeResultSubmit(SQLModel):
+    is_correct: bool
+
+
+class PracticeCardListResponse(SQLModel):
+    data: list[PracticeCardResponse]
+    count: int
+
+
+class PracticeCardResultPatch(SQLModel):
+    is_correct: bool

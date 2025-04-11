@@ -1,3 +1,5 @@
+import uuid
+
 from sqlmodel import Session, select
 
 from src.auth.services import get_password_hash
@@ -13,6 +15,12 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
     session.commit()
     session.refresh(db_obj)
     return db_obj
+
+
+def get_user_by_id(*, session: Session, user_id: uuid.UUID) -> User | None:
+    statement = select(User).where(User.id == user_id)
+    session_user = session.exec(statement).first()
+    return session_user
 
 
 def get_user_by_email(*, session: Session, email: str) -> User | None:

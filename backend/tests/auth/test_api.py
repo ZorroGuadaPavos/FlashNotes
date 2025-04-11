@@ -9,7 +9,7 @@ def test_get_access_token(client: TestClient, db: Session) -> None:  # noqa: ARG
         "username": settings.FIRST_SUPERUSER,
         "password": settings.FIRST_SUPERUSER_PASSWORD,
     }
-    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    r = client.post(f"{settings.API_V1_STR}/tokens", data=login_data)
     tokens = r.json()
     assert r.status_code == 200
     assert "access_token" in tokens
@@ -21,5 +21,5 @@ def test_get_access_token_incorrect_password(client: TestClient) -> None:
         "username": settings.FIRST_SUPERUSER,
         "password": "incorrect",
     }
-    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    r = client.post(f"{settings.API_V1_STR}/tokens", data=login_data)
     assert r.status_code == 400

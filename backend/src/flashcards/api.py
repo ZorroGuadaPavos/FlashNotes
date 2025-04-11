@@ -1,5 +1,5 @@
 import uuid
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException
 
@@ -10,7 +10,6 @@ from src.auth.services import CurrentUser, SessionDep
 from . import services
 from .exceptions import EmptyCollectionError
 from .schemas import (
-    AIFlashcardsRequest,
     Card,
     CardCreate,
     CardList,
@@ -19,8 +18,11 @@ from .schemas import (
     CollectionCreate,
     CollectionList,
     CollectionUpdate,
+    PracticeCardListResponse,
     PracticeCardResponse,
+    PracticeCardResultPatch,
     PracticeSession,
+    PracticeSessionCreate,
     PracticeSessionList,
 )
 
@@ -38,35 +40,31 @@ def read_collections(
 
 
 @router.post("/collections/", response_model=Collection)
-def create_collection(
-    session: SessionDep, current_user: CurrentUser, collection_in: CollectionCreate
-) -> Any:
-    return services.create_collection(
-        session=session, collection_in=collection_in, user_id=current_user.id
-    )
-
-
-@router.post("/collections/ai", response_model=Collection)
-async def create_ai_collection(
+async def create_collection(
     session: SessionDep,
     current_user: CurrentUser,
-    request: AIFlashcardsRequest,
+    collection_in: CollectionCreate,
     provider: GeminiProviderDep,
 ) -> Any:
-    try:
-        collection = await services.generate_ai_collection(
-            session=session,
-            user_id=current_user.id,
-            prompt=request.prompt,
-            provider=provider,
+    if collection_in.prompt:
+        try:
+            collection = await services.generate_ai_collection(
+                session=session,
+                user_id=current_user.id,
+                prompt=collection_in.prompt,
+                provider=provider,
+            )
+            return collection
+        except EmptyCollectionError:
+            raise HTTPException(
+                status_code=400, detail="Failed to generate flashcards from the prompt"
+            )
+        except AIGenerationError as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+        return services.create_collection(
+            session=session, collection_in=collection_in, user_id=current_user.id
         )
-        return collection
-    except EmptyCollectionError:
-        raise HTTPException(
-            status_code=400, detail="Failed to generate flashcards from the prompt"
-        )
-    except AIGenerationError as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/collections/{collection_id}", response_model=Collection)
@@ -194,27 +192,29 @@ def delete_card(
     return
 
 
-@router.post("/collections/{collection_id}/practice", response_model=PracticeSession)
+@router.post("/practice-sessions", response_model=PracticeSession)
 def start_practice_session(
     session: SessionDep,
     current_user: CurrentUser,
-    collection_id: uuid.UUID,
+    practice_session_in: PracticeSessionCreate,
 ) -> Any:
     """Start a new practice session for a collection"""
-    if not services.check_collection_access(session, collection_id, current_user.id):
+    if not services.check_collection_access(
+        session, practice_session_in.collection_id, current_user.id
+    ):
         raise HTTPException(status_code=404, detail="Collection not found")
 
     try:
         return services.get_or_create_practice_session(
             session=session,
-            collection_id=collection_id,
+            collection_id=practice_session_in.collection_id,
             user_id=current_user.id,
         )
     except EmptyCollectionError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/practice", response_model=PracticeSessionList)
+@router.get("/practice-sessions", response_model=PracticeSessionList)
 def list_practice_sessions(
     session: SessionDep,
     current_user: CurrentUser,
@@ -231,7 +231,7 @@ def list_practice_sessions(
     return PracticeSessionList(data=practice_sessions, count=count)
 
 
-@router.get("/practice/{practice_session_id}", response_model=PracticeSession)
+@router.get("/practice-sessions/{practice_session_id}", response_model=PracticeSession)
 def get_practice_session_status(
     session: SessionDep,
     current_user: CurrentUser,
@@ -249,13 +249,19 @@ def get_practice_session_status(
     return practice_session
 
 
-@router.get("/practice/{practice_session_id}/next", response_model=PracticeCardResponse)
-def get_next_practice_card(
+@router.get(
+    "/practice-sessions/{practice_session_id}/cards",
+    response_model=PracticeCardListResponse,
+)
+def list_practice_cards(
     session: SessionDep,
     current_user: CurrentUser,
     practice_session_id: uuid.UUID,
+    status: Literal["pending", "completed", "all"] | None = None,
+    limit: int = 100,
+    order: Literal["asc", "desc", "random"] | None = None,
 ) -> Any:
-    """Get the next card to practice"""
+    """List practice cards for a session, optionally filtering and ordering."""
     practice_session = services.get_practice_session(
         session=session,
         session_id=practice_session_id,
@@ -264,35 +270,38 @@ def get_next_practice_card(
     if not practice_session:
         raise HTTPException(status_code=404, detail="Practice session not found")
 
-    if practice_session.is_completed:
-        raise HTTPException(status_code=400, detail="Practice session is completed")
-
-    result = services.get_next_card(
-        session=session, practice_session_id=practice_session_id
-    )
-    if not result:
-        raise HTTPException(status_code=404, detail="No more cards to practice")
-
-    card, practice_card = result
-    return PracticeCardResponse(
-        card=card,
-        is_practiced=practice_card.is_practiced,
-        is_correct=practice_card.is_correct,
+    practice_cards, count = services.get_practice_cards(
+        session=session,
+        practice_session_id=practice_session_id,
+        status=status,
+        limit=limit,
+        order=order,
     )
 
+    response_data = [
+        PracticeCardResponse(
+            card=pc.card,
+            is_practiced=pc.is_practiced,
+            is_correct=pc.is_correct,
+        )
+        for pc in practice_cards
+    ]
 
-@router.post(
-    "/practice/{practice_session_id}/cards/{card_id}/submit",
+    return PracticeCardListResponse(data=response_data, count=count)
+
+
+@router.patch(
+    "/practice-sessions/{practice_session_id}/cards/{card_id}",
     response_model=PracticeCardResponse,
 )
-def submit_practice_result(
+def update_practice_card_result(
     session: SessionDep,
     current_user: CurrentUser,
     practice_session_id: uuid.UUID,
     card_id: uuid.UUID,
-    is_correct: bool,
+    result_in: PracticeCardResultPatch,
 ) -> Any:
-    """Submit the result for a practiced card"""
+    """Update the result (is_correct) for a practiced card."""
     practice_session = services.get_practice_session(
         session=session,
         session_id=practice_session_id,
@@ -312,17 +321,18 @@ def submit_practice_result(
     if not practice_card:
         raise HTTPException(status_code=404, detail="Practice card not found")
 
-    if practice_card.is_practiced:
-        raise HTTPException(status_code=400, detail="Card already practiced")
-
-    practice_card = services.submit_card_result(
+    practice_card = services.record_practice_card_result(
         session=session,
         practice_card=practice_card,
-        is_correct=is_correct,
+        is_correct=result_in.is_correct,
     )
 
+    card = services.get_card_by_id(session=session, card_id=practice_card.card_id)
+    if not card:
+        raise HTTPException(status_code=500, detail="Associated card not found")
+
     return PracticeCardResponse(
-        card=practice_card.card,
+        card=card,
         is_practiced=practice_card.is_practiced,
         is_correct=practice_card.is_correct,
     )

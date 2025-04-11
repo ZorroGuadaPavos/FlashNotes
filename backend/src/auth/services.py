@@ -16,9 +16,7 @@ from src.users.models import User
 
 ALGORITHM = "HS256"
 
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
-)
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/tokens")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SessionDep = Annotated[Session, Depends(get_db)]

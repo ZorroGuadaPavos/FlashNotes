@@ -8,8 +8,6 @@ import type {
   FlashcardsReadCollectionsResponse,
   FlashcardsCreateCollectionData,
   FlashcardsCreateCollectionResponse,
-  FlashcardsCreateAiCollectionData,
-  FlashcardsCreateAiCollectionResponse,
   FlashcardsReadCollectionData,
   FlashcardsReadCollectionResponse,
   FlashcardsUpdateCollectionData,
@@ -32,10 +30,10 @@ import type {
   FlashcardsListPracticeSessionsResponse,
   FlashcardsGetPracticeSessionStatusData,
   FlashcardsGetPracticeSessionStatusResponse,
-  FlashcardsGetNextPracticeCardData,
-  FlashcardsGetNextPracticeCardResponse,
-  FlashcardsSubmitPracticeResultData,
-  FlashcardsSubmitPracticeResultResponse,
+  FlashcardsListPracticeCardsData,
+  FlashcardsListPracticeCardsResponse,
+  FlashcardsUpdatePracticeCardResultData,
+  FlashcardsUpdatePracticeCardResultResponse,
   LoginLoginAccessTokenData,
   LoginLoginAccessTokenResponse,
   StatsGetCollectionStatisticsEndpointData,
@@ -83,27 +81,6 @@ export class FlashcardsService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/v1/flashcards/collections/",
-      body: data.requestBody,
-      mediaType: "application/json",
-      errors: {
-        422: "Validation Error",
-      },
-    })
-  }
-
-  /**
-   * Create Ai Collection
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns Collection Successful Response
-   * @throws ApiError
-   */
-  public static createAiCollection(
-    data: FlashcardsCreateAiCollectionData,
-  ): CancelablePromise<FlashcardsCreateAiCollectionResponse> {
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/v1/flashcards/collections/ai",
       body: data.requestBody,
       mediaType: "application/json",
       errors: {
@@ -313,7 +290,7 @@ export class FlashcardsService {
    * Start Practice Session
    * Start a new practice session for a collection
    * @param data The data for the request.
-   * @param data.collectionId
+   * @param data.requestBody
    * @returns PracticeSession Successful Response
    * @throws ApiError
    */
@@ -322,10 +299,9 @@ export class FlashcardsService {
   ): CancelablePromise<FlashcardsStartPracticeSessionResponse> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/flashcards/collections/{collection_id}/practice",
-      path: {
-        collection_id: data.collectionId,
-      },
+      url: "/api/v1/flashcards/practice-sessions",
+      body: data.requestBody,
+      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },
@@ -346,7 +322,7 @@ export class FlashcardsService {
   ): CancelablePromise<FlashcardsListPracticeSessionsResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/flashcards/practice",
+      url: "/api/v1/flashcards/practice-sessions",
       query: {
         skip: data.skip,
         limit: data.limit,
@@ -370,7 +346,7 @@ export class FlashcardsService {
   ): CancelablePromise<FlashcardsGetPracticeSessionStatusResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/flashcards/practice/{practice_session_id}",
+      url: "/api/v1/flashcards/practice-sessions/{practice_session_id}",
       path: {
         practice_session_id: data.practiceSessionId,
       },
@@ -381,21 +357,29 @@ export class FlashcardsService {
   }
 
   /**
-   * Get Next Practice Card
-   * Get the next card to practice
+   * List Practice Cards
+   * List practice cards for a session, optionally filtering and ordering.
    * @param data The data for the request.
    * @param data.practiceSessionId
-   * @returns PracticeCardResponse Successful Response
+   * @param data.status
+   * @param data.limit
+   * @param data.order
+   * @returns PracticeCardListResponse Successful Response
    * @throws ApiError
    */
-  public static getNextPracticeCard(
-    data: FlashcardsGetNextPracticeCardData,
-  ): CancelablePromise<FlashcardsGetNextPracticeCardResponse> {
+  public static listPracticeCards(
+    data: FlashcardsListPracticeCardsData,
+  ): CancelablePromise<FlashcardsListPracticeCardsResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/flashcards/practice/{practice_session_id}/next",
+      url: "/api/v1/flashcards/practice-sessions/{practice_session_id}/cards",
       path: {
         practice_session_id: data.practiceSessionId,
+      },
+      query: {
+        status: data.status,
+        limit: data.limit,
+        order: data.order,
       },
       errors: {
         422: "Validation Error",
@@ -404,28 +388,27 @@ export class FlashcardsService {
   }
 
   /**
-   * Submit Practice Result
-   * Submit the result for a practiced card
+   * Update Practice Card Result
+   * Update the result (is_correct) for a practiced card.
    * @param data The data for the request.
    * @param data.practiceSessionId
    * @param data.cardId
-   * @param data.isCorrect
+   * @param data.requestBody
    * @returns PracticeCardResponse Successful Response
    * @throws ApiError
    */
-  public static submitPracticeResult(
-    data: FlashcardsSubmitPracticeResultData,
-  ): CancelablePromise<FlashcardsSubmitPracticeResultResponse> {
+  public static updatePracticeCardResult(
+    data: FlashcardsUpdatePracticeCardResultData,
+  ): CancelablePromise<FlashcardsUpdatePracticeCardResultResponse> {
     return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/v1/flashcards/practice/{practice_session_id}/cards/{card_id}/submit",
+      method: "PATCH",
+      url: "/api/v1/flashcards/practice-sessions/{practice_session_id}/cards/{card_id}",
       path: {
         practice_session_id: data.practiceSessionId,
         card_id: data.cardId,
       },
-      query: {
-        is_correct: data.isCorrect,
-      },
+      body: data.requestBody,
+      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },
@@ -446,7 +429,7 @@ export class LoginService {
   ): CancelablePromise<LoginLoginAccessTokenResponse> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/login/access-token",
+      url: "/api/v1/tokens",
       formData: data.formData,
       mediaType: "application/x-www-form-urlencoded",
       errors: {
@@ -511,7 +494,7 @@ export class UsersService {
   ): CancelablePromise<UsersRegisterUserResponse> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/users/signup",
+      url: "/api/v1/users",
       body: data.requestBody,
       mediaType: "application/json",
       errors: {
