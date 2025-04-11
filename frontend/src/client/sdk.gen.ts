@@ -36,6 +36,8 @@ import type {
   FlashcardsUpdatePracticeCardResultResponse,
   LoginLoginAccessTokenData,
   LoginLoginAccessTokenResponse,
+  StatsGetCollectionStatisticsEndpointData,
+  StatsGetCollectionStatisticsEndpointResponse,
   UsersReadUserMeResponse,
   UsersRegisterUserData,
   UsersRegisterUserResponse,
@@ -430,6 +432,34 @@ export class LoginService {
       url: "/api/v1/tokens",
       formData: data.formData,
       mediaType: "application/x-www-form-urlencoded",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class StatsService {
+  /**
+   * Get Collection Statistics Endpoint
+   * @param data The data for the request.
+   * @param data.collectionId
+   * @param data.days Number of days of history to include
+   * @returns CollectionStats Successful Response
+   * @throws ApiError
+   */
+  public static getCollectionStatisticsEndpoint(
+    data: StatsGetCollectionStatisticsEndpointData,
+  ): CancelablePromise<StatsGetCollectionStatisticsEndpointResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/stats/collections/{collection_id}",
+      path: {
+        collection_id: data.collectionId,
+      },
+      query: {
+        days: data.days,
+      },
       errors: {
         422: "Validation Error",
       },

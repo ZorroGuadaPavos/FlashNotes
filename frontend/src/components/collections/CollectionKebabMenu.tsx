@@ -5,8 +5,10 @@ import {
 	MenuTrigger,
 } from "@/components/ui/menu";
 import { Box } from "@chakra-ui/react";
+import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { HiDotsVertical } from "react-icons/hi";
+import { IoStatsChart } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
@@ -22,6 +24,7 @@ function CollectionKebabMenu({
 	onRename,
 }: CollectionKebabMenuProps) {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	return (
 		<MenuRoot>
 			<MenuTrigger asChild>
@@ -47,6 +50,15 @@ function CollectionKebabMenu({
 				>
 					<RiEdit2Fill />
 					<Box flex="1">{t("general.actions.rename")}</Box>
+				</MenuItem>
+				<MenuItem
+					value="Stats"
+					onClick={() => navigate({ to: `/collections/${collectionId}/stats` })}
+					borderRadius="md"
+					_hover={{ bg: "bg.100" }}
+				>
+					<IoStatsChart />
+					<Box flex="1">{t("general.words.statistics")}</Box>
 				</MenuItem>
 				<MenuItem
 					value="delete"

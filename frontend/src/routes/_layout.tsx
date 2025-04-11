@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_layout")({
 function Layout() {
 	return (
 		<>
-			<Container pt={{ base: "4rem", md: "6rem" }}>
+			<Container pt="4rem">
 				<Navbar />
 				<Outlet />
 			</Container>

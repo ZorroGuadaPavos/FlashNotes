@@ -25,6 +25,37 @@
 		"practiceComplete": {
 			"cardsCorrect": "Je hebt {{correct}} van de {{total}} kaarten goed",
 			"title": "Oefening Voltooid"
+		},
+		"stats": {
+			"performanceOverTime": "Prestaties Over Tijd",
+			"correctRate": "Correctheid (%)",
+			"cardsPracticed": "Kaarten Geoefend",
+			"latestSessionBreakdown": "Uitsplitsing Laatste Sessie",
+			"recentPracticeSessions": "Recente Oefensessies",
+			"correctAnswers": "Juiste Antwoorden",
+			"incorrectAnswers": "Onjuiste Antwoorden",
+			"session": "Sessie",
+			"mostFailedCards": "Meest Gemiste Kaarten",
+			"failedOutOfAttempts": "{{failed}} van de {{total}} pogingen gemist",
+			"practiceTheseCards": "Focus op het oefenen van deze kaarten om je resultaten te verbeteren",
+			"practiceSessions": "Oefensessies",
+			"averageAccuracy": "Gemiddelde Nauwkeurigheid",
+			"allSessions": "alle sessies",
+			"successRate": "Succespercentage",
+			"studyStreak": "Studiereeks",
+			"days": "dagen",
+			"learningTrend": "Leertrend",
+			"comparedToPrevious": "vergeleken met vorige",
+			"notEnoughData": "niet genoeg gegevens",
+			"successRateTooltip": "Percentage juiste antwoorden in je meest recente sessie",
+			"learningTrendTooltip": "Verandering in succespercentage tussen je twee meest recente sessies",
+			"correct": "Correct",
+			"incorrect": "Onjuist",
+			"notPracticedInSession": "Niet Geoefend",
+			"notPracticedYet": "Nog Niet Geoefend",
+			"noDataAvailable": "Geen gegevens beschikbaar voor deze grafiek",
+			"lastSession": "Laatste sessie",
+			"noRecentSessions": "Geen recente sessies"
 		}
 	},
 	"general": {
@@ -55,7 +86,8 @@
 			"signUp": "Aanmelden",
 			"startPracticing": "Begin met Oefenen",
 			"toggleColorMode": "Kleurmodus Wisselen",
-			"rename": "Hernoemen"
+			"rename": "Hernoemen",
+			"practice": "Oefenen"
 		},
 		"errors": {
 			"collectionNotFound": "Collectie niet gevonden",
@@ -96,6 +128,7 @@
 			"password": "Wachtwoord",
 			"statistics": "Statistieken",
 			"totalCards": "Totaal Aantal Kaarten",
+			"cards": "kaarten",
 			"version": "Versie"
 		}
 	},
@@ -114,18 +147,6 @@
 			"index": {
 				"readyToStartLearning": "Klaar om te beginnen met leren?",
 				"createFirstCollection": "Maak je eerste collectie en begin je leerreis!"
-			},
-			"stats": {
-				"averageScore": "Gemiddelde Score",
-				"basicInfo": "Basisinformatie",
-				"cardsInProgress": "Kaarten in Behandeling",
-				"cardsMastered": "Beheerde Kaarten",
-				"cardsToReview": "Kaarten om te Herzien",
-				"difficultyDistribution": "Moeilijkheidsverdeling",
-				"practiceStatistics": "Oefenstatistieken",
-				"successRate": "Succespercentage",
-				"totalPracticeSessions": "Totaal Aantal Oefensessies",
-				"studyProgress": "Studievoortgang"
 			}
 		},
 		"publicLayout": {

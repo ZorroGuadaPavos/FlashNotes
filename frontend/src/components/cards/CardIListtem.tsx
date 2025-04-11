@@ -17,7 +17,6 @@ function CardListItem({ card, onDelete }: CardListItemProps) {
 			justifyContent="space-between"
 			borderRadius="lg"
 			borderWidth="1px"
-			boxShadow="sm"
 			borderColor="bg.100"
 			_hover={{ bg: "bg.50" }}
 		>
