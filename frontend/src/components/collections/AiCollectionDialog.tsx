@@ -58,11 +58,6 @@ const AiCollectionDialog = forwardRef<
 			placement="center"
 			motionPreset="slide-in-bottom"
 			open={open}
-			onOpenChange={(e) => {
-				if (!e.open && !isLoading) {
-					onClose();
-				}
-			}}
 		>
 			<DialogContent bg="bg.50">
 				<DialogHeader>
@@ -81,6 +76,7 @@ const AiCollectionDialog = forwardRef<
 							if (e.key === "Enter" && !isLoading) {
 								e.preventDefault();
 								handleSubmit();
+								onClose();
 							}
 						}}
 					/>
