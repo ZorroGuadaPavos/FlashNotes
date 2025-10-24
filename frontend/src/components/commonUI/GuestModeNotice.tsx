@@ -1,4 +1,4 @@
-import { useAuthContext } from '@/hooks/useAuthContext'
+import { useAuthContext } from '@/contexts/useAuthContext'
 import { HStack, Text } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'

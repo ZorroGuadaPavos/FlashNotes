@@ -1,8 +1,8 @@
+import { useAuthContext } from '@/contexts/useAuthContext'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAuthContext } from './useAuthContext'
 
 import { toaster } from '@/components/ui/toaster'
 import { AxiosError } from 'axios'
