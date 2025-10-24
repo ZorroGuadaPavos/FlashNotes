@@ -1,5 +1,7 @@
 import Logo from '@/assets/Logo.svg'
 import useAuth from '@/hooks/useAuth'
+import { emailPattern } from '@/utils/patternsUtils'
+import { confirmPasswordRules, passwordRules } from '@/utils/rulesUtils'
 import { Button, Container, Field, Fieldset, Image, Text } from '@chakra-ui/react'
 import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -7,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import type { UserRegister } from '../../client'
 import { DefaultInput } from '../../components/commonUI/Input'
 import PasswordInput from '../../components/commonUI/PasswordInput'
-import { confirmPasswordRules, emailPattern, passwordRules } from '../../utils'
 
 export const Route = createFileRoute('/_publicLayout/signup')({
   component: SignUp,

@@ -1,4 +1,4 @@
-import { MAX_CHARACTERS, WARNING_THRESHOLD } from '@/utils/text'
+import { MAX_CHARACTERS, WARNING_THRESHOLD } from '@/utils/textUtils'
 import { Text } from '@chakra-ui/react'
 
 interface TextCounterProps {

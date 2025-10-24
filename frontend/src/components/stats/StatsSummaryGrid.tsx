@@ -2,7 +2,7 @@ import { Box, SimpleGrid, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 import type { CollectionBasicInfo, PracticeSessionStats } from '@/client'
-import { calculateAverageAccuracy, calculateLearningTrend } from '@/utils/stats'
+import { calculateAverageAccuracy, calculateLearningTrend } from '@/utils/statsUtils'
 
 interface StatCardProps {
   label: string
