@@ -1,11 +1,13 @@
+import { useAuthContext } from '@/contexts/useAuthContext'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAuthContext } from './useAuthContext'
 
+import type { ApiRequestOptions } from '@/client/core/ApiRequestOptions'
 import { toaster } from '@/components/ui/toaster'
-import { AxiosError } from 'axios'
+import { type ErrorResponse, handleError, mapToApiError } from '@/utils/errorsUtils'
+import type { AxiosError } from 'axios'
 import {
   type Body_login_login_access_token as AccessToken,
   LoginService,
@@ -13,13 +15,6 @@ import {
   type UserRegister,
   UsersService,
 } from '../client'
-
-interface ErrorResponse {
-  body: {
-    detail?: string
-  }
-  status?: number
-}
 
 const useAuth = () => {
   const { t } = useTranslation()
@@ -45,22 +40,19 @@ const useAuth = () => {
       })
     },
     onError: (err: Error | AxiosError | ErrorResponse) => {
-      const errDetail =
-        err instanceof AxiosError
-          ? err.message
-          : 'body' in err && typeof err.body === 'object' && err.body
-            ? String(err.body.detail) || t('general.errors.somethingWentWrong')
-            : t('general.errors.somethingWentWrong')
-      toaster.create({
-        title: t('general.errors.errorCreatingAccount'),
-        description: errDetail,
-        type: 'error',
+      const request: ApiRequestOptions = {
+        method: 'POST',
+        url: '/signup',
+      }
+      const apiErrorDto = mapToApiError(err, request)
+      const message = handleError(apiErrorDto, {
+        toastTitle: t('general.errors.errorCreatingAccount'),
       })
-      const status = (err as AxiosError).status ?? (err as ErrorResponse).status
-      if (status === 409) {
+
+      if (apiErrorDto.status === 409) {
         setError(t('general.errors.emailAlreadyInUse') || t('general.errors.somethingWentWrong'))
       } else {
-        setError(errDetail)
+        setError(message)
       }
     },
     onSettled: () => {
@@ -81,22 +73,20 @@ const useAuth = () => {
       navigate({ to: '/collections' })
     },
     onError: (err: Error | AxiosError | ErrorResponse) => {
-      const errDetail =
-        err instanceof AxiosError
-          ? err.message
-          : 'body' in err && typeof err.body === 'object' && err.body
-            ? String(err.body.detail) || t('general.errors.somethingWentWrong')
-            : t('general.errors.somethingWentWrong')
-
-      const finalError = Array.isArray(errDetail)
-        ? t('general.errors.invalidCredentials')
-        : errDetail
-
-      toaster.create({
-        title: t('general.errors.loginFailed'),
-        description: finalError,
-        type: 'error',
+      const request: ApiRequestOptions = {
+        method: 'POST',
+        url: '/login',
+      }
+      const apiErrorDto = mapToApiError(err, request)
+      const message = handleError(apiErrorDto, {
+        toastTitle: t('general.errors.loginFailed'),
+        fallbackMessage: t('general.errors.somethingWentWrong'),
       })
+
+      let finalError = message
+      if (apiErrorDto.status === 401) {
+        finalError = t('general.errors.invalidCredentials')
+      }
       setError(finalError)
     },
   })

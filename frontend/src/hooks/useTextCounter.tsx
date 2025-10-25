@@ -1,5 +1,5 @@
 import { toaster } from '@/components/ui/toaster'
-import { MAX_CHARACTERS } from '@/utils/text'
+import { MAX_CHARACTERS } from '@/utils/textUtils'
 import type { Editor } from '@tiptap/react'
 import { useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'

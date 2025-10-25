@@ -1,5 +1,6 @@
 import Logo from '@/assets/Logo.svg'
 import useAuth from '@/hooks/useAuth'
+import { emailPattern } from '@/utils/patternsUtils'
 import { Container, Field, Fieldset, Image, Text } from '@chakra-ui/react'
 import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -7,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import type { Body_login_login_access_token as AccessToken } from '../../client'
 import { DefaultButton } from '../../components/commonUI/Button'
 import { DefaultInput } from '../../components/commonUI/Input'
-import { emailPattern } from '../../utils'
 
 export const Route = createFileRoute('/_publicLayout/login')({
   component: Login,

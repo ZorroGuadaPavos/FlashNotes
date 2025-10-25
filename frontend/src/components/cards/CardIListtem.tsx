@@ -1,5 +1,5 @@
 import type { Card } from '@/client/types.gen'
-import { stripHtml } from '@/utils/text'
+import { stripHtml } from '@/utils/textUtils'
 import { Box, HStack, IconButton, Text } from '@chakra-ui/react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'

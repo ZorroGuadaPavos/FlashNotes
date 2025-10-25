@@ -1,7 +1,7 @@
 import { BlueButton, DefaultButton } from '@/components/commonUI/Button'
 import { Footer } from '@/components/commonUI/Footer'
 import { useColorMode } from '@/components/ui/color-mode'
-import { useAuthContext } from '@/hooks/useAuthContext'
+import { useAuthContext } from '@/contexts/useAuthContext'
 import { Container, Heading, Image, Stack, Text, VStack } from '@chakra-ui/react'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
