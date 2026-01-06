@@ -15,6 +15,7 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+      - "5678-5678"
     depends_on:
       - db
     environment:
@@ -29,8 +30,11 @@ services:
       - USERS_OPEN_REGISTRATION=true
     volumes:
       - ./backend:/app
-    command: sh -c "./prestart.sh && uvicorn src.main:app --reload --host 0.0.0.0 --port 8000"
-
+    command:  sh -c "
+      pip install debugpy &&
+      python -m debugpy --wait-for-client --listen 0.0.0.0:5678
+      -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+      "
   frontend:
     build: ./frontend
     ports:

@@ -40,5 +40,8 @@ RUN chmod +x /code/prestart.sh
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
+ 
+# Install DebugPy to Debug:
+RUN uv pip install debugpy
 
 ENTRYPOINT ["sh", "entrypoint.sh"]
