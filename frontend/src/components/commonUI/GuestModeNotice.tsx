@@ -1,18 +1,34 @@
 import { useAuthContext } from '@/hooks/useAuthContext'
 import { HStack, Text } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DefaultButton } from './Button'
+import { DefaultButton, RedButton } from './Button'
+
+const GUEST_MODE_NOTIFICATION = 'guest_mode_notification'
 
 export default function GuestModeNotice() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { logout } = useAuthContext()
 
+  //check localstorage to persist the notice visibility state
+  const [showNotice, setShowNotice] = useState(() => {
+    const savedState = localStorage.getItem(GUEST_MODE_NOTIFICATION)
+    return savedState ? JSON.parse(savedState) : true // Default to be true if not found
+  })
+
   const handleLogin = () => {
     logout()
     navigate({ to: '/login' })
   }
+
+  const handleCancel = () => {
+    setShowNotice(false)
+    localStorage.setItem(GUEST_MODE_NOTIFICATION, JSON.stringify(false))
+  }
+
+  if (!showNotice) return null
 
   return (
     <HStack
@@ -36,6 +52,9 @@ export default function GuestModeNotice() {
       <DefaultButton size="xs" onClick={handleLogin}>
         {t('general.actions.login')}
       </DefaultButton>
+      <RedButton size="xs" onClick={handleCancel} variant="ghost">
+        {t('general.actions.cancel')}
+      </RedButton>
     </HStack>
   )
 }
