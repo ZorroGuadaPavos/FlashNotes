@@ -20,8 +20,8 @@ function NewCard() {
   const handleClose = async () => {
     await saveCard({
       ...card,
-      front: frontEditor?.storage.markdown.getMarkdown() || '',
-      back: backEditor?.storage.markdown.getMarkdown() || '',
+      front: frontEditor?.getHTML() || '',
+      back: backEditor?.getHTML() || '',
     })
     navigate({ to: `/collections/${collectionId}` })
   }
