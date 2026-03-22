@@ -26,7 +26,7 @@ const config = defineConfig({
             value: { _light: '#F4F4F5', _dark: '#24292E' },
           },
           code: {
-            value: { _light: '#f0f0f3', _dark: '#202429' },
+            value: { _light: '#e4e4e7', _dark: '#202429' },
           },
         },
         fg: {
@@ -38,6 +38,9 @@ const config = defineConfig({
           },
           muted: {
             value: { _light: '{colors.gray.600}', _dark: '{colors.gray.400}' },
+          },
+          code: {
+            value: { _light: '{colors.gray.700}', _dark: '{colors.gray.300}' },
           },
         },
         fbuttons: {
