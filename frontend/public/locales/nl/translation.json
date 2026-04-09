@@ -30,6 +30,10 @@
       "acceptAiSuggestion": "Accepteren en aanmaken",
       "rejectAiSuggestion": "Afwijzen en opnieuw vragen"
     },
+    "editorTextCounter": {
+      "title": "Beperking van tekens",
+      "description": "Overschrijd het maximum aantal tekens"
+    },
     "practiceComplete": {
       "cardsCorrect": "Je hebt {{correct}} van de {{total}} kaarten goed",
       "title": "Oefening Voltooid"
@@ -84,6 +88,8 @@
   "general": {
     "actions": {
       "addCard": "Kaart Toevoegen",
+      "aiQuotaResetDate": "Datum van herstart van AI-quota",
+      "aiUsageLeft": "Overgebleven AI-gebruik",
       "generateAiCard": "Kaart toevoegen met AI",
       "addCollection": "Collectie Toevoegen",
       "backToCollection": "Terug naar Collectie",
@@ -106,7 +112,6 @@
       "practiceAgain": "Opnieuw Oefenen",
       "practiceCards": "Kaarten Oefenen",
       "save": "Opslaan",
-      "showAnswer": "Toon Antwoord",
       "signUp": "Aanmelden",
       "startPracticing": "Begin met Oefenen",
       "toggleColorMode": "Kleurmodus Wisselen",
@@ -120,6 +125,7 @@
       "emailIsRequired": "E-mail is vereist",
       "errorCreatingAccount": "Fout bij het aanmaken van account",
       "errorLoadingCard": "Fout bij het laden van kaart",
+      "errorLoadingAIUsageQuota": "Fout bij het laden van AI-gebruiksquota",
       "errorSavingCard": "Fout bij het opslaan van kaart",
       "invalidCredentials": "Ongeldige inloggegevens",
       "invalidName": "Ongeldige naam",

@@ -30,6 +30,10 @@
       "acceptAiSuggestion": "Accept and create",
       "rejectAiSuggestion": "Reject and reprompt"
     },
+    "editorTextCounter": {
+      "title": "Characters Limitation",
+      "description": "Exceed the maximum characters"
+    },
     "practiceComplete": {
       "cardsCorrect": "You got {{correct}} out of {{total}} cards correct",
       "title": "Practice Complete"
@@ -84,6 +88,8 @@
   "general": {
     "actions": {
       "addCard": "Add Card",
+      "aiQuotaResetDate": "AI Usage quota reset date",
+      "aiUsageLeft": "AI usage left",
       "generateAiCard": "Add Card with AI",
       "addCollection": "Add Collection",
       "backToCollection": "Back to Collection",
@@ -106,7 +112,6 @@
       "practiceAgain": "Practice Again",
       "practiceCards": "Practice Cards",
       "save": "Save",
-      "showAnswer": "Show Answer",
       "signUp": "Sign Up",
       "startPracticing": "Start Practicing",
       "toggleColorMode": "Toggle color mode",
@@ -120,6 +125,7 @@
       "emailIsRequired": "Email is required",
       "errorCreatingAccount": "Error creating account",
       "errorLoadingCard": "Error loading card",
+      "errorLoadingAIUsageQuota": "Error loading AI usage quota",
       "errorSavingCard": "Error saving card",
       "invalidCredentials": "Invalid credentials",
       "invalidName": "Invalid name",
